@@ -32,9 +32,9 @@ const Layout = ({ children }) => {
       icon: 'bi-person-badge-fill'
     },
     {
-      path: '/veiculos',
-      name: 'Veículos',
-      icon: 'bi-truck'
+      path: '/veiculos-empresa',
+      name: 'Veículos Empresa',
+      icon: 'bi-truck-flatbed'
     },
     {
       path: '/relatorios',

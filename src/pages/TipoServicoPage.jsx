@@ -49,9 +49,22 @@ const TipoServicoPage = () => {
     try {
       await tipoServicoService.delete(id);
       await loadTiposServico(); // Reload the list
+      setError(''); // Limpar erro se sucesso
     } catch (error) {
-      setError(error.message);
-      console.error('Erro ao deletar tipo de serviço:', error);
+      console.error('Erro completo:', error);
+      // Verificar se é o erro específico do servidor (pode vir com diferentes status codes)
+      if (error.response && error.response.data && error.response.data.error) {
+        setError(error.response.data.error);
+      } else if (error.response && error.response.data && typeof error.response.data === 'string') {
+        setError(error.response.data);
+      } else {
+        setError('Erro ao deletar tipo de serviço: ' + error.message);
+      }
+      
+      // Limpar erro após 7 segundos
+      setTimeout(() => {
+        setError('');
+      }, 5000);
     }
   };
 

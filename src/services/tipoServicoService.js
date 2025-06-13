@@ -47,7 +47,8 @@ export const tipoServicoService = {
       const response = await api.delete(`/tipos-servico/${id}`);
       return response.data;
     } catch (error) {
-      throw new Error('Erro ao deletar tipo de serviço: ' + error.message);
+      // Preservar o erro original para que a mensagem do servidor seja mantida
+      throw error;
     }
   }
 };

@@ -6,7 +6,7 @@ import TipoServicoPage from './pages/TipoServicoPage';
 import Clientes from './pages/Clientes';
 import Servicos from './pages/Servicos';
 import Funcionarios from './pages/Funcionarios';
-import Veiculos from './pages/Veiculos';
+import VeiculosEmpresa from './pages/VeiculosEmpresa';
 import Relatorios from './pages/Relatorios';
 import './App.css';
 
@@ -20,7 +20,7 @@ function App() {
           <Route path="/clientes" element={<Clientes />} />
           <Route path="/servicos" element={<Servicos />} />
           <Route path="/funcionarios" element={<Funcionarios />} />
-          <Route path="/veiculos" element={<Veiculos />} />
+          <Route path="/veiculos-empresa" element={<VeiculosEmpresa />} />
           <Route path="/relatorios" element={<Relatorios />} />
         </Routes>
       </Layout>
