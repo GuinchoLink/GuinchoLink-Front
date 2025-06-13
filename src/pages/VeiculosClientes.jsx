@@ -1,27 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import ClienteList from '../components/ClienteList';
-import ClienteForm from '../components/ClienteForm';
+import VeiculoClienteList from '../components/VeiculoClienteList';
+import VeiculoClienteForm from '../components/VeiculoClienteForm';
 import Modal from '../components/Modal';
-import { clienteService } from '../services/clienteService';
+import { veiculoClienteService } from '../services/veiculoClienteService';
 
-const Clientes = () => {
-  const [clientes, setClientes] = useState([]);
+const VeiculosClientes = () => {
+  const [veiculos, setVeiculos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [formLoading, setFormLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingCliente, setEditingCliente] = useState(null);
+  const [editingVeiculo, setEditingVeiculo] = useState(null);
   const [error, setError] = useState('');
 
-  // Load all clients
-  const loadClientes = async () => {
+  // Load all vehicles
+  const loadVeiculos = async () => {
     try {
       setLoading(true);
       setError('');
-      const data = await clienteService.findAll();
-      setClientes(data);
+      const data = await veiculoClienteService.findAll();
+      setVeiculos(data);
     } catch (error) {
       setError(error.message);
-      console.error('Erro ao carregar clientes:', error);
+      console.error('Erro ao carregar veículos:', error);
     } finally {
       setLoading(false);
     }
@@ -29,29 +29,29 @@ const Clientes = () => {
 
   // Load data on component mount
   useEffect(() => {
-    loadClientes();
+    loadVeiculos();
   }, []);
 
-  // Handle create new client
+  // Handle create new vehicle
   const handleCreate = () => {
-    setEditingCliente(null);
+    setEditingVeiculo(null);
     setIsModalOpen(true);
   };
 
-  // Handle edit client
-  const handleEdit = (cliente) => {
-    setEditingCliente(cliente);
+  // Handle edit vehicle
+  const handleEdit = (veiculo) => {
+    setEditingVeiculo(veiculo);
     setIsModalOpen(true);
   };
 
-  // Handle delete client
+  // Handle delete vehicle
   const handleDelete = async (id) => {
     try {
-      await clienteService.delete(id);
-      await loadClientes(); // Reload the list
+      await veiculoClienteService.delete(id);
+      await loadVeiculos(); // Reload the list
     } catch (error) {
       setError(error.message);
-      console.error('Erro ao deletar cliente:', error);
+      console.error('Erro ao deletar veículo:', error);
     }
   };
 
@@ -61,20 +61,20 @@ const Clientes = () => {
       setFormLoading(true);
       setError('');
 
-      if (editingCliente) {
+      if (editingVeiculo) {
         // Update existing
-        await clienteService.update(editingCliente.id, formData);
+        await veiculoClienteService.update(editingVeiculo.id, formData);
       } else {
         // Create new
-        await clienteService.create(formData);
+        await veiculoClienteService.create(formData);
       }
 
       setIsModalOpen(false);
-      setEditingCliente(null);
-      await loadClientes(); // Reload the list
+      setEditingVeiculo(null);
+      await loadVeiculos(); // Reload the list
     } catch (error) {
       setError(error.message);
-      console.error('Erro ao salvar cliente:', error);
+      console.error('Erro ao salvar veículo:', error);
     } finally {
       setFormLoading(false);
     }
@@ -83,7 +83,7 @@ const Clientes = () => {
   // Handle form cancel
   const handleFormCancel = () => {
     setIsModalOpen(false);
-    setEditingCliente(null);
+    setEditingVeiculo(null);
     setError('');
   };
 
@@ -92,19 +92,19 @@ const Clientes = () => {
       <div className="d-flex justify-content-between align-items-center mb-4 flex-shrink-0">
         <div>
           <h2 className="text-primary fw-bold mb-2">
-            <i className="bi bi-people-fill me-3"></i>
-            Gerenciar Clientes
+            <i className="bi bi-truck-front-fill me-3"></i>
+            Gerenciar Veículos de Clientes
           </h2>
           <p className="text-muted mb-0">
-            Cadastre e gerencie os clientes do GuinchoLink
+            Cadastre e gerencie os veículos dos clientes do GuinchoLink
           </p>
         </div>
         <button 
           onClick={handleCreate}
           className="btn btn-primary btn-lg shadow"
         >
-          <i className="bi bi-person-plus me-2"></i>
-          Novo Cliente
+          <i className="bi bi-plus-circle me-2"></i>
+          Novo Veículo
         </button>
       </div>
 
@@ -123,8 +123,8 @@ const Clientes = () => {
 
       <div className="card shadow-sm flex-grow-1 d-flex flex-column overflow-hidden">
         <div className="card-body d-flex flex-column flex-grow-1 p-4 overflow-auto">
-          <ClienteList
-            clientes={clientes}
+          <VeiculoClienteList
+            veiculos={veiculos}
             onEdit={handleEdit}
             onDelete={handleDelete}
             loading={loading}
@@ -135,11 +135,11 @@ const Clientes = () => {
       <Modal
         isOpen={isModalOpen}
         onClose={handleFormCancel}
-        title={editingCliente ? 'Editar Cliente' : 'Novo Cliente'}
+        title={editingVeiculo ? 'Editar Veículo' : 'Novo Veículo'}
         size="lg"
       >
-        <ClienteForm
-          initialData={editingCliente}
+        <VeiculoClienteForm
+          initialData={editingVeiculo}
           onSubmit={handleFormSubmit}
           onCancel={handleFormCancel}
           loading={formLoading}
@@ -149,4 +149,4 @@ const Clientes = () => {
   );
 };
 
-export default Clientes;
+export default VeiculosClientes;
