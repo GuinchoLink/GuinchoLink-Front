@@ -33,3 +33,141 @@ body {
 .bg-gradient-primary {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
 }
+
+/* Avatar styles */
+.avatar-sm {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+}
+
+/* Table improvements */
+.table-hover tbody tr:hover {
+  background-color: rgba(0, 123, 255, 0.05);
+}
+
+.table th {
+  border-bottom: 2px solid #dee2e6;
+  font-weight: 600;
+}
+
+/* Form improvements */
+.form-label {
+  margin-bottom: 0.75rem;
+  color: #495057;
+}
+
+.form-control {
+  border: 1.5px solid #ced4da;
+  border-radius: 0.375rem;
+  padding: 0.75rem 1rem;
+  transition: all 0.15s ease-in-out;
+}
+
+.form-control:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+}
+
+.btn {
+  border-radius: 0.375rem;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.15s ease-in-out;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #0d6efd 0%, #0056b3 100%);
+  border: none;
+  box-shadow: 0 0.125rem 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #0056b3 0%, #004494 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 0.25rem 0.5rem rgba(13, 110, 253, 0.35);
+}
+
+.btn-outline-secondary {
+  border: 1.5px solid #6c757d;
+  color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  transform: translateY(-1px);
+}
+
+/* Modal improvements */
+.modal-content {
+  border: none;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-bottom: 2px solid #dee2e6;
+  padding: 1.5rem;
+}
+
+.modal-title {
+  color: #495057;
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+/* Alert improvements */
+.alert {
+  border: none;
+  border-radius: 0.5rem;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Loading spinner */
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Form section divider */
+.border-top {
+  border-color: #dee2e6 !important;
+}
+
+/* Vehicle specific styles */
+.color-indicator {
+  display: inline-block;
+  border: 2px solid #dee2e6 !important;
+}
+
+/* Form select improvements */
+.form-select {
+  border: 1.5px solid #ced4da;
+  border-radius: 0.375rem;
+  padding: 0.75rem 1rem;
+  transition: all 0.15s ease-in-out;
+}
+
+.form-select:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+}
+
+/* Vehicle badges */
+.badge {
+  font-size: 0.75rem;
+}
+
+/* License plate styling */
+.font-monospace {
+  font-family: 'Courier New', monospace !important;
+}

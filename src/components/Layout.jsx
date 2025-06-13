@@ -4,7 +4,6 @@ import { Link, useLocation } from 'react-router-dom';
 const Layout = ({ children }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const location = useLocation();
-
   const menuItems = [
     {
       path: '/',
@@ -20,6 +19,11 @@ const Layout = ({ children }) => {
       path: '/clientes',
       name: 'Clientes',
       icon: 'bi-people-fill'
+    },
+    {
+      path: '/veiculoCliente',
+      name: 'Veículos de Clientes',
+      icon: 'bi-truck-front-fill'
     },
     {
       path: '/servicos',
@@ -52,7 +56,7 @@ const Layout = ({ children }) => {
       {/* Sidebar */}
       <div className={`bg-dark text-white vh-100 d-flex flex-column flex-shrink-0`} 
            style={{ 
-             width: sidebarCollapsed ? '70px' : '280px',
+             width: sidebarCollapsed ? '100px' : '280px',
              transition: 'width 0.3s ease',
              zIndex: 1000
            }}>

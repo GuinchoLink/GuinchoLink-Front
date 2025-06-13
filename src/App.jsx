@@ -7,20 +7,21 @@ import Clientes from './pages/Clientes';
 import Servicos from './pages/Servicos';
 import Funcionarios from './pages/Funcionarios';
 import VeiculosEmpresa from './pages/VeiculosEmpresa';
+import VeiculosClientes from './pages/VeiculosClientes';
 import Relatorios from './pages/Relatorios';
 import './App.css';
 
 function App() {
   return (
     <Router>
-      <Layout>
-        <Routes>
+      <Layout>        <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/tipos-servico" element={<TipoServicoPage />} />
           <Route path="/clientes" element={<Clientes />} />
           <Route path="/servicos" element={<Servicos />} />
           <Route path="/funcionarios" element={<Funcionarios />} />
           <Route path="/veiculos-empresa" element={<VeiculosEmpresa />} />
+          <Route path="/veiculoCliente" element={<VeiculosClientes />} />
           <Route path="/relatorios" element={<Relatorios />} />
         </Routes>
       </Layout>
