@@ -171,3 +171,31 @@ body {
 .font-monospace {
   font-family: 'Courier New', monospace !important;
 }
+
+/* Sidebar navigation improvements */
+.nav-link.bg-primary {
+  background-color: #0d6efd !important;
+  color: white !important;
+}
+
+.nav-link.bg-primary:hover {
+  background-color: #0b5ed7 !important;
+  color: white !important;
+}
+
+.nav-link:not(.bg-primary):hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+}
+
+/* Remove any text decoration or outline issues */
+.nav-link {
+  outline: none !important;
+  text-decoration: none !important;
+  border: none !important;
+}
+
+.nav-link:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}

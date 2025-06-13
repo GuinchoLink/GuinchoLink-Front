@@ -1,27 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import FuncionarioList from '../components/FuncionarioList';
-import FuncionarioForm from '../components/FuncionarioForm';
+import AdministradorList from '../components/AdministradorList';
+import AdministradorForm from '../components/AdministradorForm';
 import Modal from '../components/Modal';
-import { funcionarioService } from '../services/funcionarioService';
+import { administradorService } from '../services/administradorService';
 
-const Funcionarios = () => {
-  const [funcionarios, setFuncionarios] = useState([]);
+const AdministradoresPage = () => {
+  const [administradores, setAdministradores] = useState([]);
   const [loading, setLoading] = useState(true);
   const [formLoading, setFormLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingFuncionario, setEditingFuncionario] = useState(null);
+  const [editingAdministrador, setEditingAdministrador] = useState(null);
   const [error, setError] = useState('');
 
-  // Load all funcionarios
-  const loadFuncionarios = async () => {
+  // Load all administradores
+  const loadAdministradores = async () => {
     try {
       setLoading(true);
       setError('');
-      const data = await funcionarioService.getAll();
-      setFuncionarios(data);
+      const data = await administradorService.getAll();
+      setAdministradores(data);
     } catch (error) {
       setError(error.message);
-      console.error('Erro ao carregar funcionários:', error);
+      console.error('Erro ao carregar administradores:', error);
     } finally {
       setLoading(false);
     }
@@ -29,28 +29,28 @@ const Funcionarios = () => {
 
   // Load data on component mount
   useEffect(() => {
-    loadFuncionarios();
+    loadAdministradores();
   }, []);
 
-  // Handle create new funcionario
+  // Handle create new administrador
   const handleCreate = () => {
-    setEditingFuncionario(null);
+    setEditingAdministrador(null);
     setIsModalOpen(true);
   };
 
-  // Handle edit funcionario
-  const handleEdit = (funcionario) => {
-    setEditingFuncionario(funcionario);
+  // Handle edit administrador
+  const handleEdit = (administrador) => {
+    setEditingAdministrador(administrador);
     setIsModalOpen(true);
   };
 
-  // Handle delete funcionario
+  // Handle delete administrador
   const handleDelete = async (id) => {
     try {
-      await funcionarioService.delete(id);
-      await loadFuncionarios();
+      await administradorService.delete(id);
+      await loadAdministradores();
     } catch (error) {
-      setError('Erro ao excluir funcionário: ' + error.message);
+      setError('Erro ao excluir administrador: ' + error.message);
     }
   };
 
@@ -60,15 +60,15 @@ const Funcionarios = () => {
       setFormLoading(true);
       setError('');
 
-      if (editingFuncionario) {
-        await funcionarioService.update(editingFuncionario.id, formData);
+      if (editingAdministrador) {
+        await administradorService.update(editingAdministrador.id, formData);
       } else {
-        await funcionarioService.create(formData);
+        await administradorService.create(formData);
       }
 
       setIsModalOpen(false);
-      setEditingFuncionario(null);
-      await loadFuncionarios();
+      setEditingAdministrador(null);
+      await loadAdministradores();
     } catch (error) {
       setError(error.message);
     } finally {
@@ -79,7 +79,7 @@ const Funcionarios = () => {
   // Handle form cancel
   const handleFormCancel = () => {
     setIsModalOpen(false);
-    setEditingFuncionario(null);
+    setEditingAdministrador(null);
   };
 
   return (
@@ -87,11 +87,11 @@ const Funcionarios = () => {
       <div className="d-flex justify-content-between align-items-center mb-4 flex-shrink-0">
         <div>
           <h2 className="text-primary fw-bold mb-2">
-            <i className="bi bi-person-badge-fill me-3"></i>
-            Gerenciar Funcionários
+            <i className="bi bi-person-fill-gear me-3"></i>
+            Gerenciar Administradores
           </h2>
           <p className="text-muted mb-0">
-            Cadastre e gerencie os funcionários da empresa
+            Cadastre e gerencie os administradores do sistema
           </p>
         </div>
         <button 
@@ -99,7 +99,7 @@ const Funcionarios = () => {
           className="btn btn-primary btn-lg shadow"
         >
           <i className="bi bi-person-plus me-2"></i>
-          Novo Funcionário
+          Novo Administrador
         </button>
       </div>
 
@@ -118,8 +118,8 @@ const Funcionarios = () => {
 
       <div className="card shadow-sm flex-grow-1 d-flex flex-column overflow-hidden">
         <div className="card-body d-flex flex-column flex-grow-1 p-4 overflow-auto">
-          <FuncionarioList
-            funcionarios={funcionarios}
+          <AdministradorList
+            administradores={administradores}
             onEdit={handleEdit}
             onDelete={handleDelete}
             loading={loading}
@@ -130,11 +130,11 @@ const Funcionarios = () => {
       <Modal
         isOpen={isModalOpen}
         onClose={handleFormCancel}
-        title={editingFuncionario ? 'Editar Funcionário' : 'Novo Funcionário'}
+        title={editingAdministrador ? 'Editar Administrador' : 'Novo Administrador'}
         size="lg"
       >
-        <FuncionarioForm
-          initialData={editingFuncionario}
+        <AdministradorForm
+          initialData={editingAdministrador}
           onSubmit={handleFormSubmit}
           onCancel={handleFormCancel}
           loading={formLoading}
@@ -144,4 +144,4 @@ const Funcionarios = () => {
   );
 };
 
-export default Funcionarios;
+export default AdministradoresPage;

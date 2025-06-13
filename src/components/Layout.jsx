@@ -3,8 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 const Layout = ({ children }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const location = useLocation();
-  const menuItems = [
+  const location = useLocation();  const menuItems = [
     {
       path: '/',
       name: 'Dashboard',
@@ -19,9 +18,8 @@ const Layout = ({ children }) => {
       path: '/clientes',
       name: 'Clientes',
       icon: 'bi-people-fill'
-    },
-    {
-      path: '/veiculoCliente',
+    },    {
+      path: '/veiculos-clientes',
       name: 'Veículos de Clientes',
       icon: 'bi-truck-front-fill'
     },
@@ -36,6 +34,11 @@ const Layout = ({ children }) => {
       icon: 'bi-person-badge-fill'
     },
     {
+      path: '/administradores',
+      name: 'Administradores',
+      icon: 'bi-person-fill-gear'
+    },
+    {
       path: '/veiculos-empresa',
       name: 'Veículos Empresa',
       icon: 'bi-truck-flatbed'
@@ -45,10 +48,24 @@ const Layout = ({ children }) => {
       name: 'Relatórios',
       icon: 'bi-graph-up'
     }
-  ];
-
-  const isActive = (path) => {
-    return location.pathname === path;
+  ];  const isActive = (path) => {
+    // Normalizar as rotas para comparação
+    const currentPath = location.pathname;
+    
+    // Para a rota raiz, verificar exatamente
+    if (path === '/') {
+      return currentPath === '/';
+    }
+    
+    // Para outras rotas, verificar se é exatamente igual
+    const isRouteActive = currentPath === path;
+    
+    // Debug - remover depois
+    if (isRouteActive) {
+      console.log(`Rota ativa detectada: ${path} === ${currentPath}`);
+    }
+    
+    return isRouteActive;
   };
 
   return (
@@ -77,38 +94,45 @@ const Layout = ({ children }) => {
               <i className={`bi ${sidebarCollapsed ? 'bi-chevron-right' : 'bi-chevron-left'}`}></i>
             </button>
           </div>
-        </div>
-
-        {/* Menu Items */}
+        </div>        {/* Menu Items */}
         <nav className="p-2 flex-grow-1 overflow-auto">
-          {menuItems.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={`nav-link text-white d-flex align-items-center py-3 px-3 mb-1 rounded text-decoration-none ${
-                isActive(item.path) ? 'bg-primary' : ''
-              }`}
-              style={{
-                transition: 'background-color 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                if (!isActive(item.path)) {
-                  e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!isActive(item.path)) {
-                  e.target.style.backgroundColor = 'transparent';
-                }
-              }}
-            >
-              <i className={`${item.icon} fs-5 ${sidebarCollapsed ? 'text-center' : 'me-3'}`} 
-                 style={{ width: sidebarCollapsed ? '100%' : 'auto' }}></i>
-              {!sidebarCollapsed && (
-                <span className="fw-medium">{item.name}</span>
-              )}
-            </Link>
-          ))}
+          {menuItems.map((item) => {
+            const isItemActive = isActive(item.path);
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`nav-link text-white d-flex align-items-center py-3 px-3 mb-1 rounded text-decoration-none position-relative ${
+                  isItemActive ? 'bg-primary shadow-sm' : ''
+                }`}
+                style={{
+                  transition: 'all 0.2s ease',
+                  backgroundColor: isItemActive ? '#0d6efd' : 'transparent'
+                }}
+                onMouseEnter={(e) => {
+                  if (!isItemActive) {
+                    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isItemActive) {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }
+                }}
+              >
+                <i className={`${item.icon} fs-5 ${sidebarCollapsed ? 'text-center' : 'me-3'}`} 
+                   style={{ width: sidebarCollapsed ? '100%' : 'auto' }}></i>
+                {!sidebarCollapsed && (
+                  <span className="fw-medium">{item.name}</span>
+                )}
+                {isItemActive && !sidebarCollapsed && (
+                  <div className="position-absolute end-0 me-2">
+                    <i className="bi bi-chevron-right text-white"></i>
+                  </div>
+                )}
+              </Link>
+            );
+          })}
         </nav>
 
         {/* User Info */}

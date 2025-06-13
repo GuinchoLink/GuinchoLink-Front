@@ -28,6 +28,10 @@ const Modal = ({ isOpen, onClose, title, children, size = 'lg' }) => {
             <h5 className="modal-title fw-bold">
               {title.includes('Cliente') ? (
                 <i className="bi bi-person-fill me-2 text-primary"></i>
+              ) : title.includes('Funcionário') ? (
+                <i className="bi bi-person-badge-fill me-2 text-primary"></i>
+              ) : title.includes('Administrador') ? (
+                <i className="bi bi-person-fill-gear me-2 text-primary"></i>
               ) : (
                 <i className="bi bi-gear-fill me-2 text-primary"></i>
               )}
@@ -39,7 +43,7 @@ const Modal = ({ isOpen, onClose, title, children, size = 'lg' }) => {
               onClick={onClose}
               aria-label="Fechar"
             ></button>
-          </div>          <div className="modal-body p-4">
+          </div><div className="modal-body p-4">
             {children}
           </div>
         </div>
