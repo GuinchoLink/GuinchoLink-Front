@@ -21,7 +21,7 @@ const Layout = ({ children }) => {
     },    {
       path: '/veiculos-clientes',
       name: 'Veículos de Clientes',
-      icon: 'bi-truck-front-fill'
+      icon: 'bi bi-car-front-fill'
     },
     {
       path: '/servicos',
@@ -67,34 +67,54 @@ const Layout = ({ children }) => {
     
     return isRouteActive;
   };
-
   return (
     <div className="d-flex vh-100 vw-100 position-fixed" style={{ top: 0, left: 0 }}>
       {/* Sidebar */}
-      <div className={`bg-dark text-white vh-100 d-flex flex-column flex-shrink-0`} 
+      <div className={`text-white vh-100 d-flex flex-column flex-shrink-0 sidebar-dark`} 
            style={{ 
              width: sidebarCollapsed ? '100px' : '280px',
              transition: 'width 0.3s ease',
-             zIndex: 1000
+             zIndex: 1000,
+             backgroundColor: 'var(--sidebar-bg)',
+             borderRight: '2px solid var(--sidebar-border)'
            }}>
-        
-        {/* Header do Sidebar */}
-        <div className="p-3 border-bottom border-secondary flex-shrink-0">
-          <div className="d-flex align-items-center justify-content-between">
+          {/* Header do Sidebar */}        <div className="p-3 flex-shrink-0" style={{ borderBottom: '1px solid var(--sidebar-border)' }}>
+          <div className={`d-flex align-items-center ${sidebarCollapsed ? 'flex-column gap-2' : 'justify-content-between'}`}>
             {!sidebarCollapsed && (
-              <h4 className="mb-0 fw-bold text-primary">
-                <i className="bi bi-truck me-2"></i>
-                GuinchoLink
-              </h4>
+              <div className="d-flex align-items-center">                <img 
+                  src="/guincho.png" 
+                  alt="GuinchoLink" 
+                  style={{ width: '50px', height: '40px' }}
+                  className="me-2"
+                />
+                <h4 className="mb-0 fw-bold" style={{ color: 'var(--accent-teal)' }}>
+                  GuinchoLink
+                </h4>
+              </div>
             )}
-            <button 
-              className="btn btn-outline-light btn-sm"
+            {sidebarCollapsed && (              <img 
+                src="/guincho.png" 
+                alt="GuinchoLink" 
+                style={{ width: '32px', height: '32px' }}
+                className="mb-1"
+              />
+            )}<button 
+              className="btn btn-sm d-flex align-items-center justify-content-center"
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              style={{ 
+                width: '32px', 
+                height: '32px', 
+                padding: '0',
+                fontSize: '12px',
+                backgroundColor: 'var(--secondary-teal)',
+                border: '1px solid var(--accent-teal)',
+                color: 'white'
+              }}
             >
               <i className={`bi ${sidebarCollapsed ? 'bi-chevron-right' : 'bi-chevron-left'}`}></i>
             </button>
           </div>
-        </div>        {/* Menu Items */}
+        </div>{/* Menu Items */}
         <nav className="p-2 flex-grow-1 overflow-auto">
           {menuItems.map((item) => {
             const isItemActive = isActive(item.path);
@@ -107,11 +127,11 @@ const Layout = ({ children }) => {
                 }`}
                 style={{
                   transition: 'all 0.2s ease',
-                  backgroundColor: isItemActive ? '#0d6efd' : 'transparent'
+                  backgroundColor: isItemActive ? 'var(--sidebar-active)' : 'transparent'
                 }}
                 onMouseEnter={(e) => {
                   if (!isItemActive) {
-                    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                    e.currentTarget.style.backgroundColor = 'var(--sidebar-hover)';
                   }
                 }}
                 onMouseLeave={(e) => {
@@ -121,7 +141,10 @@ const Layout = ({ children }) => {
                 }}
               >
                 <i className={`${item.icon} fs-5 ${sidebarCollapsed ? 'text-center' : 'me-3'}`} 
-                   style={{ width: sidebarCollapsed ? '100%' : 'auto' }}></i>
+                   style={{ 
+                     width: sidebarCollapsed ? '100%' : 'auto',
+                     color: isItemActive ? 'white' : 'var(--accent-teal)'
+                   }}></i>
                 {!sidebarCollapsed && (
                   <span className="fw-medium">{item.name}</span>
                 )}
@@ -137,15 +160,19 @@ const Layout = ({ children }) => {
 
         {/* User Info */}
         {!sidebarCollapsed && (
-          <div className="p-3 border-top border-secondary flex-shrink-0">
+          <div className="p-3 flex-shrink-0" style={{ borderTop: '1px solid var(--sidebar-border)' }}>
             <div className="d-flex align-items-center">
-              <div className="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" 
-                   style={{ width: '40px', height: '40px' }}>
+              <div className="rounded-circle d-flex align-items-center justify-content-center me-3" 
+                   style={{ 
+                     width: '40px', 
+                     height: '40px',
+                     backgroundColor: 'var(--secondary-teal)'
+                   }}>
                 <i className="bi bi-person-fill text-white"></i>
               </div>
               <div>
                 <div className="fw-medium">Administrador</div>
-                <small className="text-muted">admin@guincholink.com</small>
+                <small style={{ color: 'var(--accent-teal)' }}>admin@guincholink.com</small>
               </div>
             </div>
           </div>
@@ -154,12 +181,12 @@ const Layout = ({ children }) => {
 
       {/* Main Content */}
       <div className="flex-grow-1 d-flex flex-column vh-100 overflow-hidden">
-        
-        {/* Top Navigation */}
-        <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom flex-shrink-0">
+          {/* Top Navigation */}
+        <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom flex-shrink-0" 
+             style={{ borderBottomColor: 'var(--accent-teal) !important', borderBottomWidth: '2px' }}>
           <div className="container-fluid">
             <div className="d-flex align-items-center">
-              <h5 className="mb-0 text-dark fw-bold">
+              <h5 className="mb-0 fw-bold" style={{ color: 'var(--primary-blue)' }}>
                 {menuItems.find(item => item.path === location.pathname)?.name || 'Dashboard'}
               </h5>
             </div>
@@ -188,7 +215,7 @@ const Layout = ({ children }) => {
         </nav>
 
         {/* Page Content */}
-        <main className="flex-grow-1 p-4 bg-light overflow-hidden">
+        <main className="flex-grow-1 p-4 overflow-hidden" style={{ backgroundColor: 'var(--gray-100)' }}>
           <div className="container-fluid h-100 overflow-hidden">
             {children}
           </div>
