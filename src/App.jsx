@@ -13,6 +13,9 @@ import AdministradoresPage from './pages/AdministradoresPage';
 import VeiculosEmpresa from './pages/VeiculosEmpresa';
 import VeiculosClientes from './pages/VeiculosClientes';
 import Relatorios from './pages/Relatorios';
+import FimServicos from './pages/FimServicos';
+import EstatisticasGerais from './pages/EstatisticasGerais';
+import EstatisticasPorCliente from './pages/EstatisticasPorCliente';
 import './App.css';
 
 function App() {
@@ -105,6 +108,30 @@ function App() {
             <ProtectedRoute>
               <Layout>
                 <Relatorios />
+              </Layout>
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/fim-servicos" element={
+            <ProtectedRoute>
+              <Layout>
+                <FimServicos />
+              </Layout>
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/estatisticas-gerais" element={
+            <ProtectedRoute>
+              <Layout>
+                <EstatisticasGerais />
+              </Layout>
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/estatisticas-cliente" element={
+            <ProtectedRoute>
+              <Layout>
+                <EstatisticasPorCliente />
               </Layout>
             </ProtectedRoute>
           } />
