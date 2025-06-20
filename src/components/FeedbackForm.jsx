@@ -152,7 +152,7 @@ const FeedbackForm = ({ initialData, onSubmit, onCancel, loading }) => {
           <div className="col-md-6">
             <label htmlFor="nota" className="form-label fw-semibold">
               <i className="bi bi-star-fill text-warning me-2"></i>
-              Nota (Avaliação) *
+              Nota *
             </label>
             <select
               className={`form-select ${errors.nota ? 'is-invalid' : ''}`}
@@ -203,8 +203,8 @@ const FeedbackForm = ({ initialData, onSubmit, onCancel, loading }) => {
               </option>
               {fimServicos.map((fimServico) => (
                 <option key={fimServico.id} value={fimServico.id}>
-                  ID: {fimServico.id} - {fimServico.servico?.cliente?.nome || 'Cliente não identificado'} 
-                  ({new Date(fimServico.data_fim).toLocaleDateString('pt-BR')})
+                  ID: {fimServico.id} - {fimServico.servico?.cliente?.nome || 'Cliente não identificado'} -
+                  ({new Date(fimServico.hora_finalizacao).toLocaleDateString('pt-BR')})
                 </option>
               ))}
             </select>
