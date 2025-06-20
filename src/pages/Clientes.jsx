@@ -43,15 +43,31 @@ const Clientes = () => {
     setEditingCliente(cliente);
     setIsModalOpen(true);
   };
-
   // Handle delete client
   const handleDelete = async (id) => {
     try {
       await clienteService.delete(id);
       await loadClientes(); // Reload the list
     } catch (error) {
-      setError(error.message);
-      console.error('Erro ao deletar cliente:', error);
+      console.error('Erro completo:', error);
+      console.error('Error response data:', error.response?.data);
+      
+      // Verificar se é o campo "err" específico do backend
+      if (error.response && error.response.data && error.response.data.err) {
+        setError(error.response.data.err);
+      } else if (error.response && error.response.data && error.response.data.error) {
+        setError(error.response.data.error);
+      } else if (error.response && error.response.data && error.response.data.message) {
+        setError(error.response.data.message);
+      } else if (error.response && error.response.data && typeof error.response.data === 'string') {
+        setError(error.response.data);
+      } else {
+        setError('Erro ao deletar cliente: ' + error.message);
+      }
+      
+      setTimeout(() => {
+        setError('');
+      }, 5000);
     }
   };
 

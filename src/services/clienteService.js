@@ -47,7 +47,8 @@ class ClienteService {
       const response = await api.delete(`/clientes/${id}`);
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Erro ao deletar cliente');
+      throw error;
+      //throw new Error(error.response?.data?.message || 'Erro ao deletar cliente');
     }
   }
 }
