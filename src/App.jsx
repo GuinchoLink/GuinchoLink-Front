@@ -14,6 +14,7 @@ import VeiculosEmpresa from './pages/VeiculosEmpresa';
 import VeiculosClientes from './pages/VeiculosClientes';
 import Relatorios from './pages/Relatorios';
 import FimServicos from './pages/FimServicos';
+import Feedbacks from './pages/Feedbacks';
 import EstatisticasGerais from './pages/EstatisticasGerais';
 import EstatisticasPorCliente from './pages/EstatisticasPorCliente';
 import './App.css';
@@ -116,6 +117,14 @@ function App() {
             <ProtectedRoute>
               <Layout>
                 <FimServicos />
+              </Layout>
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/feedbacks" element={
+            <ProtectedRoute>
+              <Layout>
+                <Feedbacks />
               </Layout>
             </ProtectedRoute>
           } />

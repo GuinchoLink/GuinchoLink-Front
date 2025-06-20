@@ -43,11 +43,15 @@ const Layout = ({ children }) => {
       path: '/veiculos-empresa',
       name: 'Veículos Empresa',
       icon: 'bi-truck-flatbed'
-    },
-    {
+    },    {
       path: '/relatorios',
       name: 'Relatórios',
       icon: 'bi-graph-up'
+    },
+    {
+      path: '/feedbacks',
+      name: 'Feedbacks',
+      icon: 'bi-chat-heart-fill'
     }
   ];
 
