@@ -251,10 +251,30 @@ const ServicosListagem = () => {
       setTimeout(() => {
         setSuccess('');
       }, 3000);
-      
-    } catch (error) {
+        } catch (error) {
       console.error('Erro ao atualizar serviço:', error);
-      setError(error.message || 'Erro ao atualizar serviço');
+      
+      // Tratar mensagens específicas das regras de negócio
+      let errorMessage = error.message || 'Erro ao atualizar serviço';
+      
+      // Regra de negócio 1: Limite de 3 serviços por dia
+      if (errorMessage.includes('Não é possível cadastrar mais de 3 serviços no dia')) {
+        errorMessage = '⚠️ Limite Diário Atingido: Já existem 3 serviços cadastrados para este dia. Escolha outra data ou aguarde a conclusão de serviços existentes.';
+      }
+      // Regra de negócio 2: Funcionário já alocado
+      else if (errorMessage.includes('já está alocado em outro serviço pendente')) {
+        errorMessage = `🚫 Funcionário Indisponível: ${errorMessage.replace('O funcionário ', '').replace(' já está alocado em outro serviço pendente.', '')} já possui um serviço pendente. Selecione outro funcionário ou aguarde a conclusão do serviço atual.`;
+      }
+      // Outros erros relacionados a validações
+      else if (errorMessage.includes('ValidationError') || errorMessage.includes('SequelizeValidationError')) {
+        errorMessage = '📝 Dados Inválidos: Verifique se todos os campos obrigatórios foram preenchidos corretamente.';
+      }
+      // Erros de conexão
+      else if (errorMessage.includes('Network Error') || errorMessage.includes('Failed to fetch')) {
+        errorMessage = '🌐 Erro de Conexão: Não foi possível conectar ao servidor. Verifique sua conexão e tente novamente.';
+      }
+      
+      setError(errorMessage);
     } finally {
       setEditLoading(false);
     }
