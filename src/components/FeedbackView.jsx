@@ -77,7 +77,7 @@ const FeedbackView = ({ feedback }) => {
         {/* Avaliação */}
         <div className="col-12">
           <div className="card border-primary">
-            <div className="card-header bg-primary text-white">
+            <div className="card-header bg-primary">
               <h5 className="mb-0">
                 <i className="bi bi-star-fill me-2"></i>
                 Avaliação do Serviço
@@ -100,7 +100,7 @@ const FeedbackView = ({ feedback }) => {
         {/* Comentário */}
         <div className="col-12">
           <div className="card border-info">
-            <div className="card-header bg-info text-white">
+            <div className="card-header bg-info">
               <h5 className="mb-0">
                 <i className="bi bi-chat-text me-2"></i>
                 Comentário
@@ -136,7 +136,7 @@ const FeedbackView = ({ feedback }) => {
         {/* Informações do Serviço */}
         <div className="col-md-6">
           <div className="card border-success">
-            <div className="card-header bg-success text-white">
+            <div className="card-header bg-success">
               <h5 className="mb-0">
                 <i className="bi bi-check-circle me-2"></i>
                 Serviço Finalizado
@@ -184,7 +184,7 @@ const FeedbackView = ({ feedback }) => {
         {/* Informações do Feedback */}
         <div className="col-md-6">
           <div className="card border-secondary">
-            <div className="card-header bg-secondary text-white">
+            <div className="card-header bg-secondary">
               <h5 className="mb-0">
                 <i className="bi bi-info-circle me-2"></i>
                 Informações do Feedback

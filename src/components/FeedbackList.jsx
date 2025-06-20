@@ -144,11 +144,9 @@ Tem certeza que deseja continuar?`;
                       <span className="text-truncate d-inline-block" style={{ maxWidth: '200px' }} title={feedback.comentario}>
                         {feedback.comentario}
                       </span>
-                      {feedback.comentario.length > 50 && (
-                        <small className="text-muted d-block">
-                          {feedback.comentario.length} caracteres
-                        </small>
-                      )}
+                      <small className="text-muted d-block">
+                        {feedback.comentario.length} caracteres
+                      </small>
                     </div>
                   ) : (
                     <span className="text-muted fst-italic">Sem comentário</span>
