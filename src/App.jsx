@@ -8,6 +8,8 @@ import Dashboard from './pages/Dashboard';
 import TipoServicoPage from './pages/TipoServicoPage';
 import Clientes from './pages/Clientes';
 import Servicos from './pages/Servicos';
+import ServicosListagem from './pages/ServicosListagem';
+import ServicosPorFuncionario from './pages/ServicosPorFuncionario';
 import Funcionarios from './pages/Funcionarios';
 import AdministradoresPage from './pages/AdministradoresPage';
 import VeiculosEmpresa from './pages/VeiculosEmpresa';
@@ -69,6 +71,21 @@ function App() {
             <ProtectedRoute>
               <Layout>
                 <Servicos />
+              </Layout>
+            </ProtectedRoute>
+          } />
+            <Route path="/servicos-listagem" element={
+            <ProtectedRoute>
+              <Layout>
+                <ServicosListagem />
+              </Layout>
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/servicos-por-funcionario" element={
+            <ProtectedRoute>
+              <Layout>
+                <ServicosPorFuncionario />
               </Layout>
             </ProtectedRoute>
           } />

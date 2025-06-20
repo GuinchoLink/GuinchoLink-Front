@@ -4,7 +4,8 @@ import { Link, useLocation } from 'react-router-dom';
 const Layout = ({ children }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [fimServicoExpanded, setFimServicoExpanded] = useState(false);
-  const location = useLocation();  const menuItems = [
+  const [servicosExpanded, setServicosExpanded] = useState(false);
+  const location = useLocation();const menuItems = [
     {
       path: '/',
       name: 'Dashboard',
@@ -23,11 +24,6 @@ const Layout = ({ children }) => {
       path: '/veiculos-clientes',
       name: 'Veículos de Clientes',
       icon: 'bi bi-car-front-fill'
-    },
-    {
-      path: '/servicos',
-      name: 'Serviços',
-      icon: 'bi-wrench-adjustable'
     },
     {
       path: '/funcionarios',
@@ -52,9 +48,25 @@ const Layout = ({ children }) => {
       path: '/feedbacks',
       name: 'Feedbacks',
       icon: 'bi-chat-heart-fill'
+    }  ];
+  const servicosItems = [
+    {
+      path: '/servicos',
+      name: 'Cadastrar Serviço',
+      icon: 'bi-plus-circle'
+    },
+    {
+      path: '/servicos-listagem',
+      name: 'Listar Serviços',
+      icon: 'bi-list-ul'
+    },
+    {
+      path: '/servicos-por-funcionario',
+      name: 'Listar por Funcionário',
+      icon: 'bi-person-lines-fill'
     }
   ];
-
+  
   const fimServicoItems = [
     {
       path: '/fim-servicos',
@@ -85,16 +97,23 @@ const Layout = ({ children }) => {
     
     return isRouteActive;
   };
-
   // Verificar se alguma rota de fim de serviço está ativa
   const isFimServicoActive = () => {
     return fimServicoItems.some(item => isActive(item.path));
+  };
+
+  // Verificar se alguma rota de serviços está ativa
+  const isServicosActive = () => {
+    return servicosItems.some(item => isActive(item.path));
   };
 
   // Expandir automaticamente se uma rota de fim de serviço estiver ativa
   useEffect(() => {
     if (isFimServicoActive()) {
       setFimServicoExpanded(true);
+    }
+    if (isServicosActive()) {
+      setServicosExpanded(true);
     }
   }, [location.pathname]);
   return (
@@ -145,8 +164,8 @@ const Layout = ({ children }) => {
             </button>
           </div>
         </div>        {/* Menu Items */}
-        <nav className="p-2 flex-grow-1 overflow-auto">
-          {menuItems.map((item) => {
+        <nav className="p-2 flex-grow-1 overflow-auto">          {/* Primeiros 2 itens do menu */}
+          {menuItems.slice(0, 2).map((item) => {
             const isItemActive = isActive(item.path);
             return (
               <Link
@@ -186,6 +205,159 @@ const Layout = ({ children }) => {
               </Link>
             );
           })}
+
+          {/* Serviços - Menu Expansível */}
+          {!sidebarCollapsed && (
+            <div className="mb-1">
+              <button
+                className={`nav-link text-white d-flex align-items-center justify-content-between py-3 px-3 rounded text-decoration-none position-relative w-100 border-0 ${
+                  isServicosActive() ? 'bg-primary shadow-sm' : ''
+                }`}
+                style={{
+                  transition: 'all 0.2s ease',
+                  backgroundColor: isServicosActive() ? 'var(--sidebar-active)' : 'transparent'
+                }}
+                onClick={() => setServicosExpanded(!servicosExpanded)}
+                onMouseEnter={(e) => {
+                  if (!isServicosActive()) {
+                    e.currentTarget.style.backgroundColor = 'var(--sidebar-hover)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isServicosActive()) {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }
+                }}
+              >
+                <div className="d-flex align-items-center">
+                  <i className="bi-wrench-adjustable fs-5 me-3" 
+                     style={{ color: isServicosActive() ? 'white' : 'var(--accent-teal)' }}></i>
+                  <span className="fw-medium">Serviços</span>
+                </div>
+                <i className={`bi ${servicosExpanded ? 'bi-chevron-down' : 'bi-chevron-right'} text-white`}></i>
+              </button>
+              
+              {/* Subitens dos Serviços */}
+              <div className={`collapse ${servicosExpanded ? 'show' : ''}`}>
+                <div className="ms-4 mt-1">
+                  {servicosItems.map((item) => {
+                    const isItemActive = isActive(item.path);
+                    return (
+                      <Link
+                        key={item.path}
+                        to={item.path}
+                        className={`nav-link text-white d-flex align-items-center py-2 px-3 mb-1 rounded text-decoration-none position-relative ${
+                          isItemActive ? 'bg-primary shadow-sm' : ''
+                        }`}
+                        style={{
+                          transition: 'all 0.2s ease',
+                          backgroundColor: isItemActive ? 'var(--sidebar-active)' : 'transparent',
+                          fontSize: '0.9rem'
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!isItemActive) {
+                            e.currentTarget.style.backgroundColor = 'var(--sidebar-hover)';
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!isItemActive) {
+                            e.currentTarget.style.backgroundColor = 'transparent';
+                          }
+                        }}
+                      >
+                        <i className={`${item.icon} fs-6 me-3`} 
+                           style={{ color: isItemActive ? 'white' : 'var(--accent-teal)' }}></i>
+                        <span className="fw-medium">{item.name}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Menu item colapsado para Serviços */}
+          {sidebarCollapsed && (
+            <div className="dropdown">
+              <button
+                className={`nav-link text-white d-flex align-items-center py-3 px-3 mb-1 rounded text-decoration-none position-relative w-100 border-0 ${
+                  isServicosActive() ? 'bg-primary shadow-sm' : ''
+                }`}
+                style={{
+                  transition: 'all 0.2s ease',
+                  backgroundColor: isServicosActive() ? 'var(--sidebar-active)' : 'transparent'
+                }}
+                data-bs-toggle="dropdown"
+                onMouseEnter={(e) => {
+                  if (!isServicosActive()) {
+                    e.currentTarget.style.backgroundColor = 'var(--sidebar-hover)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isServicosActive()) {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }
+                }}
+              >
+                <i className="bi-wrench-adjustable fs-5 text-center" 
+                   style={{ 
+                     width: '100%',
+                     color: isServicosActive() ? 'white' : 'var(--accent-teal)'
+                   }}></i>
+              </button>
+              <ul className="dropdown-menu dropdown-menu-end">
+                {servicosItems.map((item) => (
+                  <li key={item.path}>
+                    <Link className="dropdown-item" to={item.path}>
+                      <i className={`${item.icon} me-2`}></i>
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Restante dos itens do menu */}
+          {menuItems.slice(2).map((item) => {
+            const isItemActive = isActive(item.path);
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`nav-link text-white d-flex align-items-center py-3 px-3 mb-1 rounded text-decoration-none position-relative ${
+                  isItemActive ? 'bg-primary shadow-sm' : ''
+                }`}
+                style={{
+                  transition: 'all 0.2s ease',
+                  backgroundColor: isItemActive ? 'var(--sidebar-active)' : 'transparent'
+                }}
+                onMouseEnter={(e) => {
+                  if (!isItemActive) {
+                    e.currentTarget.style.backgroundColor = 'var(--sidebar-hover)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isItemActive) {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }
+                }}
+              >
+                <i className={`${item.icon} fs-5 ${sidebarCollapsed ? 'text-center' : 'me-3'}`} 
+                   style={{ 
+                     width: sidebarCollapsed ? '100%' : 'auto',
+                     color: isItemActive ? 'white' : 'var(--accent-teal)'
+                   }}></i>
+                {!sidebarCollapsed && (
+                  <span className="fw-medium">{item.name}</span>
+                )}
+                {isItemActive && !sidebarCollapsed && (
+                  <div className="position-absolute end-0 me-2">
+                    <i className="bi bi-chevron-right text-white"></i>
+                  </div>
+                )}
+              </Link>
+            );          })}
 
           {/* Fim Serviços - Menu Expansível */}
           {!sidebarCollapsed && (
@@ -254,6 +426,47 @@ const Layout = ({ children }) => {
                   })}
                 </div>
               </div>
+            </div>          )}
+
+          {/* Menu item colapsado para Serviços */}
+          {sidebarCollapsed && (
+            <div className="dropdown">
+              <button
+                className={`nav-link text-white d-flex align-items-center py-3 px-3 mb-1 rounded text-decoration-none position-relative w-100 border-0 ${
+                  isServicosActive() ? 'bg-primary shadow-sm' : ''
+                }`}
+                style={{
+                  transition: 'all 0.2s ease',
+                  backgroundColor: isServicosActive() ? 'var(--sidebar-active)' : 'transparent'
+                }}
+                data-bs-toggle="dropdown"
+                onMouseEnter={(e) => {
+                  if (!isServicosActive()) {
+                    e.currentTarget.style.backgroundColor = 'var(--sidebar-hover)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isServicosActive()) {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }
+                }}
+              >
+                <i className="bi-wrench-adjustable fs-5 text-center" 
+                   style={{ 
+                     width: '100%',
+                     color: isServicosActive() ? 'white' : 'var(--accent-teal)'
+                   }}></i>
+              </button>
+              <ul className="dropdown-menu dropdown-menu-end">
+                {servicosItems.map((item) => (
+                  <li key={item.path}>
+                    <Link className="dropdown-item" to={item.path}>
+                      <i className={`${item.icon} me-2`}></i>
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
 
@@ -327,11 +540,13 @@ const Layout = ({ children }) => {
         <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom flex-shrink-0" 
              style={{ borderBottomColor: 'var(--accent-teal) !important', borderBottomWidth: '2px' }}>
           <div className="container-fluid">
-            <div className="d-flex align-items-center">
-              <h5 className="mb-0 fw-bold" style={{ color: 'var(--primary-blue)' }}>
+            <div className="d-flex align-items-center">              <h5 className="mb-0 fw-bold" style={{ color: 'var(--primary-blue)' }}>
                 {(() => {
                   const currentItem = menuItems.find(item => item.path === location.pathname);
                   if (currentItem) return currentItem.name;
+                  
+                  const servicosItem = servicosItems.find(item => item.path === location.pathname);
+                  if (servicosItem) return servicosItem.name;
                   
                   const fimServicoItem = fimServicoItems.find(item => item.path === location.pathname);
                   if (fimServicoItem) return fimServicoItem.name;

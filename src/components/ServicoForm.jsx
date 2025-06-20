@@ -360,7 +360,7 @@ const ServicoForm = ({ initialData, onSubmit, onCancel, loading }) => {
                 onChange={handleChange}
               >
                 <option value="pendente">Pendente</option>
-                <option value="andamento">Em Andamento</option>
+                <option value="andamento">Andamento</option>
                 <option value="finalizado">Finalizado</option>
                 <option value="cancelado">Cancelado</option>
               </select>

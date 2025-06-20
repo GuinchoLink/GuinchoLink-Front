@@ -40,14 +40,13 @@ class ServicoService {
       throw new Error(error.response?.data?.message || 'Erro ao atualizar serviço');
     }
   }
-
   // Delete service
   async delete(id) {
     try {
       const response = await api.delete(`/servicos/${id}`);
       return response.data;
     } catch (error) {
-      throw error;
+      throw new Error(error.response?.data?.message || 'Erro ao excluir serviço');
     }
   }
 }
