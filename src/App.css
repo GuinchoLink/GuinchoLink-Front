@@ -445,3 +445,43 @@ body {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(30, 58, 95, 0.3);
 }
+
+/* Feedback specific styles */
+.feedback-row:hover {
+  background-color: rgba(13, 110, 253, 0.05);
+}
+
+.rating-stars {
+  color: #ffc107;
+}
+
+.rating-empty {
+  color: #e9ecef;
+}
+
+/* Star rating animations */
+.bi-star-fill {
+  transition: all 0.2s ease-in-out;
+}
+
+.bi-star-fill:hover {
+  transform: scale(1.1);
+}
+
+/* Badge improvements for feedback */
+.badge.bg-success {
+  background-color: #198754 !important;
+}
+
+.badge.bg-info {
+  background-color: #0dcaf0 !important;
+}
+
+.badge.bg-warning {
+  background-color: #ffc107 !important;
+  color: #000 !important;
+}
+
+.badge.bg-danger {
+  background-color: #dc3545 !important;
+}
