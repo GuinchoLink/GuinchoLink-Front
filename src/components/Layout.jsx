@@ -43,12 +43,8 @@ const Layout = ({ children }) => {
       path: '/relatorios',
       name: 'Relatórios',
       icon: 'bi-graph-up'
-    },
-    {
-      path: '/feedbacks',
-      name: 'Feedbacks',
-      icon: 'bi-chat-heart-fill'
-    }  ];
+    }
+  ];
   const servicosItems = [
     {
       path: '/servicos',
@@ -164,13 +160,14 @@ const Layout = ({ children }) => {
             </button>
           </div>
         </div>        {/* Menu Items */}
-        <nav className="p-2 flex-grow-1 overflow-auto">          {/* Primeiros 2 itens do menu */}
-          {menuItems.slice(0, 2).map((item) => {
-            const isItemActive = isActive(item.path);
+        <nav className="p-2 flex-grow-1 overflow-auto">          {/* Dashboard */}
+          {(() => {
+            const dashboardItem = menuItems[0];
+            const isItemActive = isActive(dashboardItem.path);
             return (
               <Link
-                key={item.path}
-                to={item.path}
+                key={dashboardItem.path}
+                to={dashboardItem.path}
                 className={`nav-link text-white d-flex align-items-center py-3 px-3 mb-1 rounded text-decoration-none position-relative ${
                   isItemActive ? 'bg-primary shadow-sm' : ''
                 }`}
@@ -189,13 +186,13 @@ const Layout = ({ children }) => {
                   }
                 }}
               >
-                <i className={`${item.icon} fs-5 ${sidebarCollapsed ? 'text-center' : 'me-3'}`} 
+                <i className={`${dashboardItem.icon} fs-5 ${sidebarCollapsed ? 'text-center' : 'me-3'}`} 
                    style={{ 
                      width: sidebarCollapsed ? '100%' : 'auto',
                      color: isItemActive ? 'white' : 'var(--accent-teal)'
                    }}></i>
                 {!sidebarCollapsed && (
-                  <span className="fw-medium">{item.name}</span>
+                  <span className="fw-medium">{dashboardItem.name}</span>
                 )}
                 {isItemActive && !sidebarCollapsed && (
                   <div className="position-absolute end-0 me-2">
@@ -204,7 +201,7 @@ const Layout = ({ children }) => {
                 )}
               </Link>
             );
-          })}
+          })()}
 
           {/* Serviços - Menu Expansível */}
           {!sidebarCollapsed && (
@@ -318,47 +315,6 @@ const Layout = ({ children }) => {
             </div>
           )}
 
-          {/* Restante dos itens do menu */}
-          {menuItems.slice(2).map((item) => {
-            const isItemActive = isActive(item.path);
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`nav-link text-white d-flex align-items-center py-3 px-3 mb-1 rounded text-decoration-none position-relative ${
-                  isItemActive ? 'bg-primary shadow-sm' : ''
-                }`}
-                style={{
-                  transition: 'all 0.2s ease',
-                  backgroundColor: isItemActive ? 'var(--sidebar-active)' : 'transparent'
-                }}
-                onMouseEnter={(e) => {
-                  if (!isItemActive) {
-                    e.currentTarget.style.backgroundColor = 'var(--sidebar-hover)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isItemActive) {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                  }
-                }}
-              >
-                <i className={`${item.icon} fs-5 ${sidebarCollapsed ? 'text-center' : 'me-3'}`} 
-                   style={{ 
-                     width: sidebarCollapsed ? '100%' : 'auto',
-                     color: isItemActive ? 'white' : 'var(--accent-teal)'
-                   }}></i>
-                {!sidebarCollapsed && (
-                  <span className="fw-medium">{item.name}</span>
-                )}
-                {isItemActive && !sidebarCollapsed && (
-                  <div className="position-absolute end-0 me-2">
-                    <i className="bi bi-chevron-right text-white"></i>
-                  </div>
-                )}
-              </Link>
-            );          })}
-
           {/* Fim Serviços - Menu Expansível */}
           {!sidebarCollapsed && (
             <div className="mb-1">
@@ -426,47 +382,6 @@ const Layout = ({ children }) => {
                   })}
                 </div>
               </div>
-            </div>          )}
-
-          {/* Menu item colapsado para Serviços */}
-          {sidebarCollapsed && (
-            <div className="dropdown">
-              <button
-                className={`nav-link text-white d-flex align-items-center py-3 px-3 mb-1 rounded text-decoration-none position-relative w-100 border-0 ${
-                  isServicosActive() ? 'bg-primary shadow-sm' : ''
-                }`}
-                style={{
-                  transition: 'all 0.2s ease',
-                  backgroundColor: isServicosActive() ? 'var(--sidebar-active)' : 'transparent'
-                }}
-                data-bs-toggle="dropdown"
-                onMouseEnter={(e) => {
-                  if (!isServicosActive()) {
-                    e.currentTarget.style.backgroundColor = 'var(--sidebar-hover)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isServicosActive()) {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                  }
-                }}
-              >
-                <i className="bi-wrench-adjustable fs-5 text-center" 
-                   style={{ 
-                     width: '100%',
-                     color: isServicosActive() ? 'white' : 'var(--accent-teal)'
-                   }}></i>
-              </button>
-              <ul className="dropdown-menu dropdown-menu-end">
-                {servicosItems.map((item) => (
-                  <li key={item.path}>
-                    <Link className="dropdown-item" to={item.path}>
-                      <i className={`${item.icon} me-2`}></i>
-                      {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
             </div>
           )}
 
@@ -501,6 +416,132 @@ const Layout = ({ children }) => {
               </button>
               <ul className="dropdown-menu dropdown-menu-end">
                 {fimServicoItems.map((item) => (
+                  <li key={item.path}>
+                    <Link className="dropdown-item" to={item.path}>
+                      <i className={`${item.icon} me-2`}></i>
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Feedbacks - Item individual */}
+          {(() => {
+            const feedbacksItem = { path: '/feedbacks', name: 'Feedbacks', icon: 'bi-chat-heart-fill' };
+            const isItemActive = isActive(feedbacksItem.path);
+            return (
+              <Link
+                key={feedbacksItem.path}
+                to={feedbacksItem.path}
+                className={`nav-link text-white d-flex align-items-center py-3 px-3 mb-1 rounded text-decoration-none position-relative ${
+                  isItemActive ? 'bg-primary shadow-sm' : ''
+                }`}
+                style={{
+                  transition: 'all 0.2s ease',
+                  backgroundColor: isItemActive ? 'var(--sidebar-active)' : 'transparent'
+                }}
+                onMouseEnter={(e) => {
+                  if (!isItemActive) {
+                    e.currentTarget.style.backgroundColor = 'var(--sidebar-hover)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isItemActive) {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }
+                }}
+              >
+                <i className={`${feedbacksItem.icon} fs-5 ${sidebarCollapsed ? 'text-center' : 'me-3'}`} 
+                   style={{ 
+                     width: sidebarCollapsed ? '100%' : 'auto',
+                     color: isItemActive ? 'white' : 'var(--accent-teal)'
+                   }}></i>
+                {!sidebarCollapsed && (
+                  <span className="fw-medium">{feedbacksItem.name}</span>
+                )}
+                {isItemActive && !sidebarCollapsed && (
+                  <div className="position-absolute end-0 me-2">
+                    <i className="bi bi-chevron-right text-white"></i>
+                  </div>
+                )}
+              </Link>
+            );
+          })()}
+
+          {/* Restante dos itens do menu */}
+          {menuItems.slice(1).map((item) => {
+            const isItemActive = isActive(item.path);
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`nav-link text-white d-flex align-items-center py-3 px-3 mb-1 rounded text-decoration-none position-relative ${
+                  isItemActive ? 'bg-primary shadow-sm' : ''
+                }`}
+                style={{
+                  transition: 'all 0.2s ease',
+                  backgroundColor: isItemActive ? 'var(--sidebar-active)' : 'transparent'
+                }}
+                onMouseEnter={(e) => {
+                  if (!isItemActive) {
+                    e.currentTarget.style.backgroundColor = 'var(--sidebar-hover)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isItemActive) {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }
+                }}
+              >
+                <i className={`${item.icon} fs-5 ${sidebarCollapsed ? 'text-center' : 'me-3'}`} 
+                   style={{ 
+                     width: sidebarCollapsed ? '100%' : 'auto',
+                     color: isItemActive ? 'white' : 'var(--accent-teal)'
+                   }}></i>
+                {!sidebarCollapsed && (
+                  <span className="fw-medium">{item.name}</span>
+                )}
+                {isItemActive && !sidebarCollapsed && (
+                  <div className="position-absolute end-0 me-2">
+                    <i className="bi bi-chevron-right text-white"></i>
+                  </div>
+                )}
+              </Link>
+            );          })}
+
+          {/* Menu item colapsado para Serviços */}
+          {sidebarCollapsed && (
+            <div className="dropdown">
+              <button
+                className={`nav-link text-white d-flex align-items-center py-3 px-3 mb-1 rounded text-decoration-none position-relative w-100 border-0 ${
+                  isServicosActive() ? 'bg-primary shadow-sm' : ''
+                }`}
+                style={{
+                  transition: 'all 0.2s ease',
+                  backgroundColor: isServicosActive() ? 'var(--sidebar-active)' : 'transparent'
+                }}
+                data-bs-toggle="dropdown"
+                onMouseEnter={(e) => {
+                  if (!isServicosActive()) {
+                    e.currentTarget.style.backgroundColor = 'var(--sidebar-hover)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isServicosActive()) {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }
+                }}
+              >
+                <i className="bi-wrench-adjustable fs-5 text-center" 
+                   style={{ 
+                     width: '100%',
+                     color: isServicosActive() ? 'white' : 'var(--accent-teal)'
+                   }}></i>
+              </button>
+              <ul className="dropdown-menu dropdown-menu-end">
+                {servicosItems.map((item) => (
                   <li key={item.path}>
                     <Link className="dropdown-item" to={item.path}>
                       <i className={`${item.icon} me-2`}></i>
@@ -550,6 +591,9 @@ const Layout = ({ children }) => {
                   
                   const fimServicoItem = fimServicoItems.find(item => item.path === location.pathname);
                   if (fimServicoItem) return fimServicoItem.name;
+                  
+                  // Verificar se é a página de Feedbacks
+                  if (location.pathname === '/feedbacks') return 'Feedbacks';
                   
                   return 'Dashboard';
                 })()}
