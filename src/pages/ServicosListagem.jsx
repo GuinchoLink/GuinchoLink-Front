@@ -442,7 +442,7 @@ const ServicosListagem = () => {
             Serviços ({servicosFiltrados.length})
           </h5>
         </div>
-        <div className="card-body p-0 flex-grow-1 overflow-auto">
+        <div className="card-body p-0 flex-grow-1 overflow-auto table-container">
           {servicosFiltrados.length === 0 ? (
             <div className="text-center py-5">
               <i className="bi bi-inbox display-1 text-muted"></i>
@@ -451,7 +451,7 @@ const ServicosListagem = () => {
               </p>
             </div>
           ) : (
-            <div className="table-responsive">
+            <div className="table-responsive table-container">
               <table className="table table-hover mb-0">
                 <thead className="table-light sticky-top">
                   <tr>

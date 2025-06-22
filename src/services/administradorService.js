@@ -56,3 +56,5 @@ export const administradorService = {
     }
   }
 };
+
+export default administradorService;

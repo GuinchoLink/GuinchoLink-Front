@@ -1,11 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 const Layout = ({ children }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [fimServicoExpanded, setFimServicoExpanded] = useState(false);
   const [servicosExpanded, setServicosExpanded] = useState(false);
-  const location = useLocation();const menuItems = [
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { logout, user } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/login');
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
+    }
+  };const menuItems = [
     {
       path: '/',
       name: 'Dashboard',
@@ -43,12 +55,8 @@ const Layout = ({ children }) => {
       path: '/relatorios',
       name: 'Relatórios',
       icon: 'bi-graph-up'
-    },
-    {
-      path: '/feedbacks',
-      name: 'Feedbacks',
-      icon: 'bi-chat-heart-fill'
-    }  ];
+    }
+  ];
   const servicosItems = [
     {
       path: '/servicos',
@@ -119,7 +127,7 @@ const Layout = ({ children }) => {
   return (
     <div className="d-flex vh-100 vw-100 position-fixed" style={{ top: 0, left: 0 }}>
       {/* Sidebar */}
-      <div className={`text-white vh-100 d-flex flex-column flex-shrink-0 sidebar-dark`} 
+      <div className={`text-white vh-100 d-flex flex-column flex-shrink-0 sidebar sidebar-dark`} 
            style={{ 
              width: sidebarCollapsed ? '100px' : '280px',
              transition: 'width 0.3s ease',
@@ -164,13 +172,14 @@ const Layout = ({ children }) => {
             </button>
           </div>
         </div>        {/* Menu Items */}
-        <nav className="p-2 flex-grow-1 overflow-auto">          {/* Primeiros 2 itens do menu */}
-          {menuItems.slice(0, 2).map((item) => {
-            const isItemActive = isActive(item.path);
+        <nav className="p-2 flex-grow-1 overflow-auto">          {/* Dashboard */}
+          {(() => {
+            const dashboardItem = menuItems[0];
+            const isItemActive = isActive(dashboardItem.path);
             return (
               <Link
-                key={item.path}
-                to={item.path}
+                key={dashboardItem.path}
+                to={dashboardItem.path}
                 className={`nav-link text-white d-flex align-items-center py-3 px-3 mb-1 rounded text-decoration-none position-relative ${
                   isItemActive ? 'bg-primary shadow-sm' : ''
                 }`}
@@ -189,13 +198,13 @@ const Layout = ({ children }) => {
                   }
                 }}
               >
-                <i className={`${item.icon} fs-5 ${sidebarCollapsed ? 'text-center' : 'me-3'}`} 
+                <i className={`${dashboardItem.icon} fs-5 ${sidebarCollapsed ? 'text-center' : 'me-3'}`} 
                    style={{ 
                      width: sidebarCollapsed ? '100%' : 'auto',
                      color: isItemActive ? 'white' : 'var(--accent-teal)'
                    }}></i>
                 {!sidebarCollapsed && (
-                  <span className="fw-medium">{item.name}</span>
+                  <span className="fw-medium">{dashboardItem.name}</span>
                 )}
                 {isItemActive && !sidebarCollapsed && (
                   <div className="position-absolute end-0 me-2">
@@ -204,7 +213,7 @@ const Layout = ({ children }) => {
                 )}
               </Link>
             );
-          })}
+          })()}
 
           {/* Serviços - Menu Expansível */}
           {!sidebarCollapsed && (
@@ -318,47 +327,6 @@ const Layout = ({ children }) => {
             </div>
           )}
 
-          {/* Restante dos itens do menu */}
-          {menuItems.slice(2).map((item) => {
-            const isItemActive = isActive(item.path);
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`nav-link text-white d-flex align-items-center py-3 px-3 mb-1 rounded text-decoration-none position-relative ${
-                  isItemActive ? 'bg-primary shadow-sm' : ''
-                }`}
-                style={{
-                  transition: 'all 0.2s ease',
-                  backgroundColor: isItemActive ? 'var(--sidebar-active)' : 'transparent'
-                }}
-                onMouseEnter={(e) => {
-                  if (!isItemActive) {
-                    e.currentTarget.style.backgroundColor = 'var(--sidebar-hover)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isItemActive) {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                  }
-                }}
-              >
-                <i className={`${item.icon} fs-5 ${sidebarCollapsed ? 'text-center' : 'me-3'}`} 
-                   style={{ 
-                     width: sidebarCollapsed ? '100%' : 'auto',
-                     color: isItemActive ? 'white' : 'var(--accent-teal)'
-                   }}></i>
-                {!sidebarCollapsed && (
-                  <span className="fw-medium">{item.name}</span>
-                )}
-                {isItemActive && !sidebarCollapsed && (
-                  <div className="position-absolute end-0 me-2">
-                    <i className="bi bi-chevron-right text-white"></i>
-                  </div>
-                )}
-              </Link>
-            );          })}
-
           {/* Fim Serviços - Menu Expansível */}
           {!sidebarCollapsed && (
             <div className="mb-1">
@@ -426,47 +394,6 @@ const Layout = ({ children }) => {
                   })}
                 </div>
               </div>
-            </div>          )}
-
-          {/* Menu item colapsado para Serviços */}
-          {sidebarCollapsed && (
-            <div className="dropdown">
-              <button
-                className={`nav-link text-white d-flex align-items-center py-3 px-3 mb-1 rounded text-decoration-none position-relative w-100 border-0 ${
-                  isServicosActive() ? 'bg-primary shadow-sm' : ''
-                }`}
-                style={{
-                  transition: 'all 0.2s ease',
-                  backgroundColor: isServicosActive() ? 'var(--sidebar-active)' : 'transparent'
-                }}
-                data-bs-toggle="dropdown"
-                onMouseEnter={(e) => {
-                  if (!isServicosActive()) {
-                    e.currentTarget.style.backgroundColor = 'var(--sidebar-hover)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isServicosActive()) {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                  }
-                }}
-              >
-                <i className="bi-wrench-adjustable fs-5 text-center" 
-                   style={{ 
-                     width: '100%',
-                     color: isServicosActive() ? 'white' : 'var(--accent-teal)'
-                   }}></i>
-              </button>
-              <ul className="dropdown-menu dropdown-menu-end">
-                {servicosItems.map((item) => (
-                  <li key={item.path}>
-                    <Link className="dropdown-item" to={item.path}>
-                      <i className={`${item.icon} me-2`}></i>
-                      {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
             </div>
           )}
 
@@ -511,10 +438,136 @@ const Layout = ({ children }) => {
               </ul>
             </div>
           )}
+
+          {/* Feedbacks - Item individual */}
+          {(() => {
+            const feedbacksItem = { path: '/feedbacks', name: 'Feedbacks', icon: 'bi-chat-heart-fill' };
+            const isItemActive = isActive(feedbacksItem.path);
+            return (
+              <Link
+                key={feedbacksItem.path}
+                to={feedbacksItem.path}
+                className={`nav-link text-white d-flex align-items-center py-3 px-3 mb-1 rounded text-decoration-none position-relative ${
+                  isItemActive ? 'bg-primary shadow-sm' : ''
+                }`}
+                style={{
+                  transition: 'all 0.2s ease',
+                  backgroundColor: isItemActive ? 'var(--sidebar-active)' : 'transparent'
+                }}
+                onMouseEnter={(e) => {
+                  if (!isItemActive) {
+                    e.currentTarget.style.backgroundColor = 'var(--sidebar-hover)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isItemActive) {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }
+                }}
+              >
+                <i className={`${feedbacksItem.icon} fs-5 ${sidebarCollapsed ? 'text-center' : 'me-3'}`} 
+                   style={{ 
+                     width: sidebarCollapsed ? '100%' : 'auto',
+                     color: isItemActive ? 'white' : 'var(--accent-teal)'
+                   }}></i>
+                {!sidebarCollapsed && (
+                  <span className="fw-medium">{feedbacksItem.name}</span>
+                )}
+                {isItemActive && !sidebarCollapsed && (
+                  <div className="position-absolute end-0 me-2">
+                    <i className="bi bi-chevron-right text-white"></i>
+                  </div>
+                )}
+              </Link>
+            );
+          })()}
+
+          {/* Restante dos itens do menu */}
+          {menuItems.slice(1).map((item) => {
+            const isItemActive = isActive(item.path);
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`nav-link text-white d-flex align-items-center py-3 px-3 mb-1 rounded text-decoration-none position-relative ${
+                  isItemActive ? 'bg-primary shadow-sm' : ''
+                }`}
+                style={{
+                  transition: 'all 0.2s ease',
+                  backgroundColor: isItemActive ? 'var(--sidebar-active)' : 'transparent'
+                }}
+                onMouseEnter={(e) => {
+                  if (!isItemActive) {
+                    e.currentTarget.style.backgroundColor = 'var(--sidebar-hover)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isItemActive) {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }
+                }}
+              >
+                <i className={`${item.icon} fs-5 ${sidebarCollapsed ? 'text-center' : 'me-3'}`} 
+                   style={{ 
+                     width: sidebarCollapsed ? '100%' : 'auto',
+                     color: isItemActive ? 'white' : 'var(--accent-teal)'
+                   }}></i>
+                {!sidebarCollapsed && (
+                  <span className="fw-medium">{item.name}</span>
+                )}
+                {isItemActive && !sidebarCollapsed && (
+                  <div className="position-absolute end-0 me-2">
+                    <i className="bi bi-chevron-right text-white"></i>
+                  </div>
+                )}
+              </Link>
+            );          })}
+
+          {/* Menu item colapsado para Serviços */}
+          {sidebarCollapsed && (
+            <div className="dropdown">
+              <button
+                className={`nav-link text-white d-flex align-items-center py-3 px-3 mb-1 rounded text-decoration-none position-relative w-100 border-0 ${
+                  isServicosActive() ? 'bg-primary shadow-sm' : ''
+                }`}
+                style={{
+                  transition: 'all 0.2s ease',
+                  backgroundColor: isServicosActive() ? 'var(--sidebar-active)' : 'transparent'
+                }}
+                data-bs-toggle="dropdown"
+                onMouseEnter={(e) => {
+                  if (!isServicosActive()) {
+                    e.currentTarget.style.backgroundColor = 'var(--sidebar-hover)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isServicosActive()) {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }
+                }}
+              >
+                <i className="bi-wrench-adjustable fs-5 text-center" 
+                   style={{ 
+                     width: '100%',
+                     color: isServicosActive() ? 'white' : 'var(--accent-teal)'
+                   }}></i>
+              </button>
+              <ul className="dropdown-menu dropdown-menu-end">
+                {servicosItems.map((item) => (
+                  <li key={item.path}>
+                    <Link className="dropdown-item" to={item.path}>
+                      <i className={`${item.icon} me-2`}></i>
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </nav>
 
         {/* User Info */}
-        {!sidebarCollapsed && (
+        {!sidebarCollapsed && user && (
           <div className="p-3 flex-shrink-0" style={{ borderTop: '1px solid var(--sidebar-border)' }}>
             <div className="d-flex align-items-center">
               <div className="rounded-circle d-flex align-items-center justify-content-center me-3" 
@@ -526,8 +579,8 @@ const Layout = ({ children }) => {
                 <i className="bi bi-person-fill text-white"></i>
               </div>
               <div>
-                <div className="fw-medium">Administrador</div>
-                <small style={{ color: 'var(--accent-teal)' }}>admin@guincholink.com</small>
+                <div className="fw-medium">{user.nome || 'Administrador'}</div>
+                <small style={{ color: 'var(--accent-teal)' }}>{user.email || 'admin@guincholink.com'}</small>
               </div>
             </div>
           </div>
@@ -551,28 +604,41 @@ const Layout = ({ children }) => {
                   const fimServicoItem = fimServicoItems.find(item => item.path === location.pathname);
                   if (fimServicoItem) return fimServicoItem.name;
                   
+                  // Verificar se é a página de Feedbacks
+                  if (location.pathname === '/feedbacks') return 'Feedbacks';
+                  
+                  // Verificar se é a página de Perfil
+                  if (location.pathname === '/perfil') return 'Meu Perfil';
+                  
                   return 'Dashboard';
                 })()}
               </h5>
             </div>
             
             <div className="d-flex align-items-center gap-3">
-              <button className="btn btn-outline-primary btn-sm">
-                <i className="bi bi-bell me-1"></i>
-                Notificações
-              </button>
               <div className="dropdown">
                 <button className="btn btn-outline-secondary dropdown-toggle btn-sm" 
                         type="button" 
                         data-bs-toggle="dropdown">
                   <i className="bi bi-person-circle me-1"></i>
-                  Perfil
+                  {user?.nome ? (user.nome.split(' ')[0]) : 'Perfil'}
                 </button>
-                <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#"><i className="bi bi-person me-2"></i>Meu Perfil</a></li>
-                  <li><a className="dropdown-item" href="#"><i className="bi bi-gear me-2"></i>Configurações</a></li>
+                <ul className="dropdown-menu dropdown-menu-end">
+                  <li>
+                    <Link className="dropdown-item" to="/perfil">
+                      <i className="bi bi-person me-2"></i>Meu Perfil
+                    </Link>
+                  </li>
                   <li><hr className="dropdown-divider" /></li>
-                  <li><a className="dropdown-item text-danger" href="#"><i className="bi bi-box-arrow-right me-2"></i>Sair</a></li>
+                  <li>
+                    <button 
+                      className="dropdown-item text-danger" 
+                      onClick={handleLogout}
+                      style={{ border: 'none', background: 'none', width: '100%', textAlign: 'left' }}
+                    >
+                      <i className="bi bi-box-arrow-right me-2"></i>Sair
+                    </button>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -580,7 +646,7 @@ const Layout = ({ children }) => {
         </nav>
 
         {/* Page Content */}
-        <main className="flex-grow-1 p-4 overflow-hidden" style={{ backgroundColor: 'var(--gray-100)' }}>
+        <main className="flex-grow-1 p-4 overflow-hidden content-area" style={{ backgroundColor: 'var(--gray-100)' }}>
           <div className="container-fluid h-100 overflow-hidden">
             {children}
           </div>
