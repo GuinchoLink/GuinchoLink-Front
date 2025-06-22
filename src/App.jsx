@@ -19,6 +19,7 @@ import FimServicos from './pages/FimServicos';
 import Feedbacks from './pages/Feedbacks';
 import EstatisticasGerais from './pages/EstatisticasGerais';
 import EstatisticasPorCliente from './pages/EstatisticasPorCliente';
+import Perfil from './pages/Perfil';
 import './App.css';
 
 function App() {
@@ -158,6 +159,14 @@ function App() {
             <ProtectedRoute>
               <Layout>
                 <EstatisticasPorCliente />
+              </Layout>
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/perfil" element={
+            <ProtectedRoute>
+              <Layout>
+                <Perfil />
               </Layout>
             </ProtectedRoute>
           } />

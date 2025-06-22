@@ -92,7 +92,7 @@ const EstatisticasGerais = () => {
         </div>
       )}
 
-      <div className="flex-grow-1" style={{ overflowX: 'hidden' }}>
+      <div className="flex-grow-1 stats-area" style={{ overflowX: 'hidden' }}>
         {!statistics ? (
           <div className="card shadow-sm h-100 d-flex align-items-center justify-content-center">
             <div className="text-center py-5">
@@ -192,7 +192,7 @@ const EstatisticasGerais = () => {
                     </h5>
                   </div>
                   <div className="card-body p-0">
-                    <div className="table-responsive">
+                    <div className="table-responsive table-container">
                       <table className="table table-hover table-striped align-middle mb-0" style={{ tableLayout: 'fixed', width: '100%' }}>
                         <thead className="table-dark">
                           <tr>

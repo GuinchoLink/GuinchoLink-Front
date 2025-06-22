@@ -299,7 +299,7 @@ const Feedbacks = () => {  const [feedbacks, setFeedbacks] = useState([]);
 
       {/* Content */}
       <div className="card shadow-sm flex-grow-1 d-flex flex-column overflow-hidden">
-        <div className="card-body d-flex flex-column flex-grow-1 p-4 overflow-auto">
+        <div className="card-body d-flex flex-column flex-grow-1 p-4 overflow-auto client-list">
           <FeedbackList
             feedbacks={feedbacks}
             onEdit={handleEdit}

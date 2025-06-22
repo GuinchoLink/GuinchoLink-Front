@@ -1,11 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 const Layout = ({ children }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [fimServicoExpanded, setFimServicoExpanded] = useState(false);
   const [servicosExpanded, setServicosExpanded] = useState(false);
-  const location = useLocation();const menuItems = [
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/login');
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
+    }
+  };const menuItems = [
     {
       path: '/',
       name: 'Dashboard',
@@ -115,7 +127,7 @@ const Layout = ({ children }) => {
   return (
     <div className="d-flex vh-100 vw-100 position-fixed" style={{ top: 0, left: 0 }}>
       {/* Sidebar */}
-      <div className={`text-white vh-100 d-flex flex-column flex-shrink-0 sidebar-dark`} 
+      <div className={`text-white vh-100 d-flex flex-column flex-shrink-0 sidebar sidebar-dark`} 
            style={{ 
              width: sidebarCollapsed ? '100px' : '280px',
              transition: 'width 0.3s ease',
@@ -595,16 +607,15 @@ const Layout = ({ children }) => {
                   // Verificar se é a página de Feedbacks
                   if (location.pathname === '/feedbacks') return 'Feedbacks';
                   
+                  // Verificar se é a página de Perfil
+                  if (location.pathname === '/perfil') return 'Meu Perfil';
+                  
                   return 'Dashboard';
                 })()}
               </h5>
             </div>
             
             <div className="d-flex align-items-center gap-3">
-              <button className="btn btn-outline-primary btn-sm">
-                <i className="bi bi-bell me-1"></i>
-                Notificações
-              </button>
               <div className="dropdown">
                 <button className="btn btn-outline-secondary dropdown-toggle btn-sm" 
                         type="button" 
@@ -612,11 +623,22 @@ const Layout = ({ children }) => {
                   <i className="bi bi-person-circle me-1"></i>
                   Perfil
                 </button>
-                <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#"><i className="bi bi-person me-2"></i>Meu Perfil</a></li>
-                  <li><a className="dropdown-item" href="#"><i className="bi bi-gear me-2"></i>Configurações</a></li>
+                <ul className="dropdown-menu dropdown-menu-end">
+                  <li>
+                    <Link className="dropdown-item" to="/perfil">
+                      <i className="bi bi-person me-2"></i>Meu Perfil
+                    </Link>
+                  </li>
                   <li><hr className="dropdown-divider" /></li>
-                  <li><a className="dropdown-item text-danger" href="#"><i className="bi bi-box-arrow-right me-2"></i>Sair</a></li>
+                  <li>
+                    <button 
+                      className="dropdown-item text-danger" 
+                      onClick={handleLogout}
+                      style={{ border: 'none', background: 'none', width: '100%', textAlign: 'left' }}
+                    >
+                      <i className="bi bi-box-arrow-right me-2"></i>Sair
+                    </button>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -624,7 +646,7 @@ const Layout = ({ children }) => {
         </nav>
 
         {/* Page Content */}
-        <main className="flex-grow-1 p-4 overflow-hidden" style={{ backgroundColor: 'var(--gray-100)' }}>
+        <main className="flex-grow-1 p-4 overflow-hidden content-area" style={{ backgroundColor: 'var(--gray-100)' }}>
           <div className="container-fluid h-100 overflow-hidden">
             {children}
           </div>
