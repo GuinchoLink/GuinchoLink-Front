@@ -8,7 +8,7 @@ const Layout = ({ children }) => {
   const [servicosExpanded, setServicosExpanded] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
 
   const handleLogout = async () => {
     try {
@@ -567,7 +567,7 @@ const Layout = ({ children }) => {
         </nav>
 
         {/* User Info */}
-        {!sidebarCollapsed && (
+        {!sidebarCollapsed && user && (
           <div className="p-3 flex-shrink-0" style={{ borderTop: '1px solid var(--sidebar-border)' }}>
             <div className="d-flex align-items-center">
               <div className="rounded-circle d-flex align-items-center justify-content-center me-3" 
@@ -579,8 +579,8 @@ const Layout = ({ children }) => {
                 <i className="bi bi-person-fill text-white"></i>
               </div>
               <div>
-                <div className="fw-medium">Administrador</div>
-                <small style={{ color: 'var(--accent-teal)' }}>admin@guincholink.com</small>
+                <div className="fw-medium">{user.nome || 'Administrador'}</div>
+                <small style={{ color: 'var(--accent-teal)' }}>{user.email || 'admin@guincholink.com'}</small>
               </div>
             </div>
           </div>
@@ -621,7 +621,7 @@ const Layout = ({ children }) => {
                         type="button" 
                         data-bs-toggle="dropdown">
                   <i className="bi bi-person-circle me-1"></i>
-                  Perfil
+                  {user?.nome ? (user.nome.split(' ')[0]) : 'Perfil'}
                 </button>
                 <ul className="dropdown-menu dropdown-menu-end">
                   <li>
