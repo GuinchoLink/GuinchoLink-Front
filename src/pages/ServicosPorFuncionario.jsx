@@ -414,7 +414,7 @@ const ServicosPorFuncionario = () => {
           <div className="row g-3">
             <div className="col-md-6">
               <div className="card h-100">
-                <div className="card-header bg-dark text-white">
+                <div className="card-header bg-dark">
                   <h6 className="mb-0">
                     <i className="bi bi-info-circle me-2"></i>
                     Informações Básicas
@@ -439,7 +439,7 @@ const ServicosPorFuncionario = () => {
             
             <div className="col-md-6">
               <div className="card h-100">
-                <div className="card-header bg-dark text-white">
+                <div className="card-header bg-dark">
                   <h6 className="mb-0">
                     <i className="bi bi-people me-2"></i>
                     Pessoas Envolvidas
@@ -464,7 +464,7 @@ const ServicosPorFuncionario = () => {
             
             <div className="col-12">
               <div className="card">
-                <div className="card-header bg-dark text-white">
+                <div className="card-header bg-dark">
                   <h6 className="mb-0">
                     <i className="bi bi-text-paragraph me-2"></i>
                     Descrição
