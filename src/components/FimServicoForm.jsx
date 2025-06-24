@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { servicoService } from '../services/servicoService';
 
 // Função para formatar data/hora no padrão "YYYY-MM-DDTHH:mm" com fuso local
 const formatDateToLocalInput = (date) => {
@@ -24,6 +25,29 @@ const FimServicoForm = ({ initialData, onSubmit, onCancel, loading }) => {
 
   const [errors, setErrors] = useState({});
   const [backendError, setBackendError] = useState('');
+  const [servicos, setServicos] = useState([]);
+  const [loadingServicos, setLoadingServicos] = useState(true);
+
+  // Carregar serviços disponíveis
+  useEffect(() => {
+    const loadServicos = async () => {
+      try {
+        setLoadingServicos(true);
+        const data = await servicoService.findAll();
+        
+        // Filtrar apenas serviços com status "pendente"
+        const servicosPendentes = data.filter(servico => servico.status === 'pendente');
+        setServicos(servicosPendentes);
+      } catch (error) {
+        console.error('Erro ao carregar serviços:', error);
+        setBackendError('Erro ao carregar lista de serviços');
+      } finally {
+        setLoadingServicos(false);
+      }
+    };
+
+    loadServicos();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -49,8 +73,8 @@ const FimServicoForm = ({ initialData, onSubmit, onCancel, loading }) => {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.servico_id.trim()) {
-      newErrors.servico_id = 'ID do serviço é obrigatório';
+    if (!formData.servico_id) {
+      newErrors.servico_id = 'Selecione um serviço';
     }
 
     if (!formData.hora_finalizacao) {
@@ -99,6 +123,33 @@ const FimServicoForm = ({ initialData, onSubmit, onCancel, loading }) => {
 
   return (
     <div className="container-fluid">
+      <style>
+        {`
+          input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='%23212529' d='M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z'/%3e%3c/svg%3e");
+            background-color: transparent;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 16px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            padding: 2px;
+          }
+          
+          input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
+            background-color: #f8f9fa;
+            border-color: #86b7fe;
+          }
+          
+          input[type="datetime-local"] {
+            color-scheme: light;
+          }
+        `}
+      </style>
+      
       {/* Exibir erro do backend */}
       {backendError && (
         <div className="alert alert-danger alert-dismissible fade show mb-4" role="alert">
@@ -115,26 +166,61 @@ const FimServicoForm = ({ initialData, onSubmit, onCancel, loading }) => {
       
       <form onSubmit={handleSubmit} noValidate>
         <div className="row">
-          {/* ID do Serviço */}
+          {/* Seleção do Serviço */}
           <div className="col-md-6 mb-3">
             <label htmlFor="servico_id" className="form-label fw-bold">
-              <i className="bi bi-hash me-2 text-primary"></i>
-              ID do Serviço *
+              <i className="bi bi-gear me-2 text-primary"></i>
+              Serviço *
             </label>
-            <input
-              type="number"
-              className={`form-control ${errors.servico_id ? 'is-invalid' : ''}`}
-              id="servico_id"
-              name="servico_id"
-              value={formData.servico_id}
-              onChange={handleChange}
-              placeholder="Digite o ID do serviço"
-              disabled={loading}
-            />
+            {loadingServicos ? (
+              <div className="form-control d-flex align-items-center">
+                <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                Carregando serviços...
+              </div>
+            ) : (
+              <select
+                className={`form-select ${errors.servico_id ? 'is-invalid' : ''}`}
+                id="servico_id"
+                name="servico_id"
+                value={formData.servico_id}
+                onChange={handleChange}
+                disabled={loading}
+              >
+                <option value="">
+                  {servicos.length === 0 ? 'Nenhum serviço pendente encontrado' : 'Selecione um serviço pendente'}
+                </option>
+                {servicos.map((servico) => (
+                  <option key={servico.id} value={servico.id}>
+                    #{servico.id} - {servico.cliente?.nome} | {servico.funcionario?.nome} | {servico.tipo_servico?.nome}
+                  </option>
+                ))}
+              </select>
+            )}
             {errors.servico_id && (
               <div className="invalid-feedback">
                 <i className="bi bi-exclamation-circle me-1"></i>
                 {errors.servico_id}
+              </div>
+            )}
+            {formData.servico_id && (
+              <div className="form-text">
+                <small className="text-muted">
+                  <i className="bi bi-info-circle me-1"></i>
+                  {(() => {
+                    const servicoSelecionado = servicos.find(s => s.id === parseInt(formData.servico_id));
+                    return servicoSelecionado ? 
+                      `Status: ${servicoSelecionado.status} | Local: ${servicoSelecionado.localizacao}` : 
+                      '';
+                  })()}
+                </small>
+              </div>
+            )}
+            {!loadingServicos && servicos.length === 0 && (
+              <div className="form-text">
+                <small className="text-warning">
+                  <i className="bi bi-exclamation-triangle me-1"></i>
+                  Não há serviços pendentes disponíveis para finalização no momento.
+                </small>
               </div>
             )}
           </div>

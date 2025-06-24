@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import FimServicoForm from '../components/FimServicoForm';
 import Modal from '../components/Modal';
 import { fimServicoService } from '../services/fimServicoService';
+import { servicoService } from '../services/servicoService';
 
 const FimServicos = () => {
   const [fimServicos, setFimServicos] = useState([]);
@@ -45,10 +46,24 @@ const FimServicos = () => {
 
   // Lidar com exclusão de fim de serviço
   const handleDelete = async (id) => {
-    if (window.confirm('Tem certeza que deseja excluir este fim de serviço?')) {
+    if (window.confirm('Tem certeza que deseja excluir este fim de serviço?\n\nO serviço voltará para o status "pendente" e poderá ser finalizado novamente.')) {
       try {
+        // Primeiro, buscar o fim de serviço para obter o servico_id
+        const fimServicoToDelete = fimServicos.find(fs => fs.id === id);
+        if (!fimServicoToDelete) {
+          throw new Error('Fim de serviço não encontrado');
+        }
+
+        // Deletar o fim de serviço
         await fimServicoService.delete(id);
-        await loadFimServicos(); // Recarregar a lista
+
+        // Atualizar o status do serviço para "pendente"
+        await servicoService.update(fimServicoToDelete.servico_id, { 
+          status: 'pendente' 
+        });
+
+        // Recarregar a lista
+        await loadFimServicos();
       } catch (error) {
         setError(error.message);
         console.error('Erro ao deletar fim de serviço:', error);
