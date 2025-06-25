@@ -492,7 +492,7 @@ const ServicosListagem = () => {
                     <th scope="col">Cliente</th>
                     <th scope="col">Tipo</th>
                     <th scope="col">Funcionário</th>
-                    <th scope="col">Veículo</th>
+                    <th scope="col">Veículo Empresa</th>
                     <th scope="col">Data/Hora</th>
                     <th scope="col">Status</th>
                     <th scope="col">Localização</th>
