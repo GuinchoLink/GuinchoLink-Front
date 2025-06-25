@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { servicoService } from '../services/servicoService.js';
 import { funcionarioService } from '../services/funcionarioService.js';
 import { tipoServicoService } from '../services/tipoServicoService.js';
+import { veiculoEmpresaService } from '../services/veiculoEmpresaService.js';
 import Modal from '../components/Modal.jsx';
 
 const ServicosListagem = () => {
@@ -28,12 +29,14 @@ const ServicosListagem = () => {
     descricao: '',
     funcionario_id: '',
     tipo_servico_id: '',
+    veiculo_empresa_id: '',
     hora_solicitacao: ''
   });  const [editLoading, setEditLoading] = useState(false);
   
   // Estados para opções dos dropdowns
   const [funcionarios, setFuncionarios] = useState([]);
   const [tiposServico, setTiposServico] = useState([]);
+  const [veiculosEmpresa, setVeiculosEmpresa] = useState([]);
   const [loadingOptions, setLoadingOptions] = useState(false);
   
   // Estados para filtros
@@ -42,6 +45,7 @@ const ServicosListagem = () => {
 
   useEffect(() => {
     loadServicos();
+    loadVeiculosEmpresa();
   }, []);
 
   const loadServicos = async () => {
@@ -65,6 +69,24 @@ const ServicosListagem = () => {
       setError(error.message || 'Erro ao carregar serviços');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadVeiculosEmpresa = async () => {
+    try {
+      console.log('Carregando veículos da empresa...');
+      const data = await veiculoEmpresaService.findAll();
+      console.log('Veículos da empresa carregados:', data);
+      
+      if (Array.isArray(data)) {
+        setVeiculosEmpresa(data);
+      } else {
+        console.error('Dados de veículos não são um array:', data);
+        setVeiculosEmpresa([]);
+      }
+    } catch (error) {
+      console.error('Erro ao carregar veículos da empresa:', error);
+      setVeiculosEmpresa([]);
     }
   };
 
@@ -188,6 +210,7 @@ const ServicosListagem = () => {
         descricao: servico.descricao || '',
         funcionario_id: servico.funcionario_id || '',
         tipo_servico_id: servico.tipo_servico_id || '',
+        veiculo_empresa_id: servico.veiculo_empresa_id || '',
         hora_solicitacao: formatDateForInput(servico.hora_solicitacao)
       });
       
@@ -227,6 +250,7 @@ const ServicosListagem = () => {
         ...editFormData,
         funcionario_id: parseInt(editFormData.funcionario_id) || null,
         tipo_servico_id: parseInt(editFormData.tipo_servico_id) || null,
+        veiculo_empresa_id: parseInt(editFormData.veiculo_empresa_id) || null,
         hora_solicitacao: editFormData.hora_solicitacao ? new Date(editFormData.hora_solicitacao).toISOString() : null
       };
       
@@ -242,6 +266,7 @@ const ServicosListagem = () => {
         descricao: '',
         funcionario_id: '',
         tipo_servico_id: '',
+        veiculo_empresa_id: '',
         hora_solicitacao: ''
       });
       
@@ -289,6 +314,7 @@ const ServicosListagem = () => {
       descricao: '',
       funcionario_id: '',
       tipo_servico_id: '',
+      veiculo_empresa_id: '',
       hora_solicitacao: ''
     });
     setEditLoading(false);
@@ -305,6 +331,13 @@ const ServicosListagem = () => {
       hour: '2-digit',
       minute: '2-digit'
     });
+  };
+
+  // Função para obter o modelo do veículo da empresa pelo ID
+  const getVeiculoModelo = (veiculoEmpresaId) => {
+    if (!veiculoEmpresaId) return 'N/A';
+    const veiculo = veiculosEmpresa.find(v => v.id === veiculoEmpresaId);
+    return veiculo?.modelo || 'N/A';
   };
 
   // Função para obter badge de status
@@ -459,6 +492,7 @@ const ServicosListagem = () => {
                     <th scope="col">Cliente</th>
                     <th scope="col">Tipo</th>
                     <th scope="col">Funcionário</th>
+                    <th scope="col">Veículo Empresa</th>
                     <th scope="col">Data/Hora</th>
                     <th scope="col">Status</th>
                     <th scope="col">Localização</th>
@@ -487,6 +521,12 @@ const ServicosListagem = () => {
                         <div className="d-flex align-items-center">
                           <i className="bi bi-person-badge me-2 text-success"></i>
                           {servico.funcionario?.nome || 'N/A'}
+                        </div>
+                      </td>
+                      <td>
+                        <div className="d-flex align-items-center">
+                          <i className="bi bi-car-front me-2 text-warning"></i>
+                          {getVeiculoModelo(servico.veiculo_empresa_id)}
                         </div>
                       </td>
                       <td>
@@ -589,6 +629,10 @@ const ServicosListagem = () => {
                   <div className="mb-3">
                     <label className="form-label fw-bold">Tipo de Serviço:</label>
                     <div className="text-muted">{servicoToView.tipo_servico?.nome || 'N/A'}</div>
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label fw-bold">Veículo Usado:</label>
+                    <div className="text-muted">{getVeiculoModelo(servicoToView.veiculo_empresa_id)}</div>
                   </div>
                 </div>
               </div>
@@ -799,6 +843,41 @@ const ServicosListagem = () => {
                     </select>
                   )}
                 </div>
+              </div>
+            </div>
+
+            <div className="row">
+              <div className="col-md-6">
+                <div className="mb-3">
+                  <label htmlFor="editVeiculoEmpresa" className="form-label fw-bold">
+                    <i className="bi bi-car-front me-1"></i>
+                    Veículo da Empresa
+                  </label>
+                  {loadingOptions ? (
+                    <div className="form-control d-flex align-items-center">
+                      <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                      Carregando veículos...
+                    </div>
+                  ) : (
+                    <select
+                      id="editVeiculoEmpresa"
+                      name="veiculo_empresa_id"
+                      className="form-select"
+                      value={editFormData.veiculo_empresa_id}
+                      onChange={handleEditFormChange}
+                    >
+                      <option value="">Selecione um veículo</option>
+                      {veiculosEmpresa.map((veiculo) => (
+                        <option key={veiculo.id} value={veiculo.id}>
+                          {veiculo.modelo} - {veiculo.placa}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                </div>
+              </div>
+              <div className="col-md-6">
+                {/* Espaço para manter o layout balanceado */}
               </div>
             </div>
 
