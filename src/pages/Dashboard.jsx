@@ -350,7 +350,7 @@ const Dashboard = () => {
           <div className="bg-gradient-primary text-white p-3 rounded-3">
             <div className="d-flex align-items-center">
               <img 
-                src="/guincho.png" 
+                src="/GuinchoLink-Front/guincho.png" 
                 alt="GuinchoLink" 
                 style={{ width: '60px', height: '60px' }}
                 className="me-3"

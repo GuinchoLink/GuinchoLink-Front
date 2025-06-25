@@ -139,7 +139,7 @@ const Layout = ({ children }) => {
           <div className={`d-flex align-items-center ${sidebarCollapsed ? 'flex-column gap-2' : 'justify-content-between'}`}>
             {!sidebarCollapsed && (
               <div className="d-flex align-items-center">                <img 
-                  src="/guincho.png" 
+                  src="/GuinchoLink-Front/guincho.png" 
                   alt="GuinchoLink" 
                   style={{ width: '50px', height: '40px' }}
                   className="me-2"
@@ -150,7 +150,7 @@ const Layout = ({ children }) => {
               </div>
             )}
             {sidebarCollapsed && (              <img 
-                src="/guincho.png" 
+                src="/GuinchoLink-Front/guincho.png" 
                 alt="GuinchoLink" 
                 style={{ width: '32px', height: '32px' }}
                 className="mb-1"

@@ -62,7 +62,7 @@ const Login = () => {
               <div className="card-body">
                 <div className="text-center mb-4">
                   <img 
-                    src="/guincho.png" 
+                    src="/GuinchoLink-Front/guincho.png" 
                     alt="GuinchoLink" 
                     className="login-logo mb-3"
                     style={{ height: '60px' }}

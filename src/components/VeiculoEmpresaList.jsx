@@ -34,13 +34,13 @@ const VeiculoEmpresaList = ({ veiculos, onEdit, onDelete, loading }) => {
 
   const getTipoIcon = (tipo) => {
     const iconConfig = {
-      'moto': { type: 'image', value: '/src/assets/images/motocicleta.png' },
-      'pickup': { type: 'image', value: '/src/assets/images/caminhonete.png' },
+      'moto': { type: 'image', value: '/GuinchoLink-Front/images/motocicleta.png' },
+      'pickup': { type: 'image', value: '/GuinchoLink-Front/images/caminhonete.png' },
       'caminhaoPrancha': { type: 'icon', value: 'bi-truck-flatbed' },
-      'carro': { type: 'image', value: '/src/assets/images/sedan.png' },
+      'carro': { type: 'image', value: '/GuinchoLink-Front/images/sedan.png' },
       'caminhaoLanca': { type: 'icon', value: 'bi-truck' }
     };
-    return iconConfig[tipo] || { type: 'image', value: '/src/assets/images/sedan.png' };
+    return iconConfig[tipo] || { type: 'image', value: '/GuinchoLink-Front/images/sedan.png' };
   };
 
   if (loading) {
