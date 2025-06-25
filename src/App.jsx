@@ -25,12 +25,7 @@ import './App.css';
 function App() {
   return (
     <AuthProvider>
-      <Router 
-        future={{
-          v7_startTransition: true,
-          v7_relativeSplatPath: true
-        }}
-      >
+      <Router basename="/GuinchoLink-Front">
         <Routes>
           {/* Rota de login (pública) */}
           <Route path="/login" element={<Login />} />
