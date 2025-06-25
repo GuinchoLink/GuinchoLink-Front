@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { fimServicoService } from '../services/fimServicoService';
+import { clienteService } from '../services/clienteService';
 
 const EstatisticasPorCliente = () => {
   const [clienteId, setClienteId] = useState('');
+  const [clientes, setClientes] = useState([]);
+  const [loadingClientes, setLoadingClientes] = useState(false);
   const [statistics, setStatistics] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -22,7 +25,24 @@ const EstatisticasPorCliente = () => {
         sessionStorage.removeItem('estatisticas_cliente_data');
       }
     }
+    
+    // Carregar lista de clientes
+    loadClientes();
   }, []);
+
+  // Carregar lista de clientes
+  const loadClientes = async () => {
+    try {
+      setLoadingClientes(true);
+      const data = await clienteService.findAll();
+      setClientes(data);
+    } catch (error) {
+      console.error('Erro ao carregar clientes:', error);
+      setError('Erro ao carregar lista de clientes');
+    } finally {
+      setLoadingClientes(false);
+    }
+  };
 
   // Carregar estatísticas específicas do cliente
   const loadClienteStatistics = async (id) => {
@@ -46,23 +66,6 @@ const EstatisticasPorCliente = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (clienteId.trim()) {
-      loadClienteStatistics(clienteId.trim());
-    }
-  };
-
-  const handleClear = () => {
-    setClienteId('');
-    setStatistics(null);
-    setError('');
-    
-    // Limpar dados salvos
-    sessionStorage.removeItem('estatisticas_cliente_id');
-    sessionStorage.removeItem('estatisticas_cliente_data');
   };
 
   const formatCurrency = (value) => {
@@ -95,68 +98,76 @@ const EstatisticasPorCliente = () => {
             Consulte as estatísticas detalhadas de um cliente específico
           </p>
         </div>
-        {statistics && (
+        {statistics && clienteId && (
           <button 
             onClick={() => loadClienteStatistics(clienteId)}
             className="btn btn-outline-primary"
             disabled={loading}
           >
-            <i className="bi bi-arrow-clockwise me-2"></i>
-            Atualizar Dados
+            {loading ? (
+              <>
+                <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                Atualizando...
+              </>
+            ) : (
+              <>
+                <i className="bi bi-arrow-clockwise me-2"></i>
+                Atualizar Dados
+              </>
+            )}
           </button>
         )}
       </div>
 
-      {/* Formulário de Busca */}
+      {/* Seleção de Cliente */}
       <div className="card shadow-sm mb-4 flex-shrink-0">
         <div className="card-body">
-          <form onSubmit={handleSearch} className="row g-3 align-items-end">
-            <div className="col-md-8">
+          <div className="row g-3">
+            <div className="col-md-12">
               <label htmlFor="clienteId" className="form-label fw-bold">
-                <i className="bi bi-search me-2"></i>
-                ID do Cliente
+                <i className="bi bi-person me-2"></i>
+                Cliente
               </label>
-              <input
-                type="number"
-                className="form-control"
+              <select
+                className="form-select"
                 id="clienteId"
                 value={clienteId}
-                onChange={(e) => setClienteId(e.target.value)}
-                placeholder="Digite o ID do cliente"
-                disabled={loading}
-              />
+                onChange={(e) => {
+                  const selectedId = e.target.value;
+                  setClienteId(selectedId);
+                  if (selectedId) {
+                    loadClienteStatistics(selectedId);
+                  } else {
+                    setStatistics(null);
+                    setError('');
+                    // Limpar dados salvos quando nenhum cliente está selecionado
+                    sessionStorage.removeItem('estatisticas_cliente_id');
+                    sessionStorage.removeItem('estatisticas_cliente_data');
+                  }
+                }}
+                disabled={loading || loadingClientes}
+              >
+                <option value="">Selecione um cliente...</option>
+                {clientes.map((cliente) => (
+                  <option key={cliente.id} value={cliente.id}>
+                    #{cliente.id} - {cliente.nome}
+                  </option>
+                ))}
+              </select>
+              {loadingClientes && (
+                <div className="form-text">
+                  <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                  Carregando clientes...
+                </div>
+              )}
+              {loading && (
+                <div className="form-text">
+                  <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                  Carregando estatísticas...
+                </div>
+              )}
             </div>
-            <div className="col-md-4">
-              <div className="d-flex gap-2">
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                  disabled={loading || !clienteId.trim()}
-                >
-                  {loading ? (
-                    <>
-                      <span className="spinner-border spinner-border-sm me-2" role="status"></span>
-                      Buscando...
-                    </>
-                  ) : (
-                    <>
-                      <i className="bi bi-search me-2"></i>
-                      Buscar
-                    </>
-                  )}
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-outline-secondary"
-                  onClick={handleClear}
-                  disabled={loading}
-                >
-                  <i className="bi bi-x-circle me-2"></i>
-                  Limpar
-                </button>
-              </div>
-            </div>
-          </form>
+          </div>
         </div>
       </div>
 
@@ -181,9 +192,9 @@ const EstatisticasPorCliente = () => {
               <div className="mb-4">
                 <i className="bi bi-person-circle display-1 text-muted"></i>
               </div>
-              <h5 className="text-muted mb-3">Pesquise por um cliente</h5>
+              <h5 className="text-muted mb-3">Selecione um cliente</h5>
               <p className="text-muted">
-                Digite o ID do cliente acima para visualizar suas estatísticas detalhadas.
+                Selecione um cliente na lista acima para visualizar suas estatísticas detalhadas.
               </p>
             </div>
           </div>
@@ -209,7 +220,9 @@ const EstatisticasPorCliente = () => {
                     <div className="col-md-4">
                       <h6 className="text-muted mb-1">Nome do Cliente</h6>
                       <p className="fs-5 fw-bold mb-3">
-                        {statistics.nomeCliente || 'Nome não disponível'}
+                        {clientes.find(c => c.id == statistics.cliente_id)?.nome || 
+                         statistics.nomeCliente || 
+                         'Nome não disponível'}
                       </p>
                     </div>
                     <div className="col-md-4">
