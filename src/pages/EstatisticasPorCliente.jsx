@@ -203,7 +203,7 @@ const EstatisticasPorCliente = () => {
             {/* Informações do Cliente */}
             <div className="col-12">
               <div className="card shadow-sm">
-                <div className="card-header bg-primary text-white">
+                <div className="card-header bg-primary">
                   <h5 className="card-title mb-0">
                     <i className="bi bi-person-badge me-2"></i>
                     Informações do Cliente
