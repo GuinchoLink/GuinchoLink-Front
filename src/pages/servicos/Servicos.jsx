@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import ServicoForm from '../components/ServicoForm.jsx';
-import { servicoService } from '../services/servicoService.js';
-import { FormattedAlert, formatBusinessRuleError } from '../utils/errorHandler.jsx';
+import ServicoForm from '../../components/servicos/ServicoForm.jsx';
+import { servicoService } from '../../services/servicoService.js';
+import { FormattedAlert, formatBusinessRuleError } from '../../utils/errorHandler.jsx';
 
 const Servicos = () => {
   const [loading, setLoading] = useState(false);

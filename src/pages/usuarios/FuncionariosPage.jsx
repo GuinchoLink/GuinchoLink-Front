@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import FuncionarioList from '../components/FuncionarioList';
-import FuncionarioForm from '../components/FuncionarioForm';
-import Modal from '../components/Modal';
+import FuncionarioList from '../../components/usuarios/FuncionarioList';
+import FuncionarioForm from '../../components/usuarios/FuncionarioForm';
+import Modal from '../../components/common/Modal';
 
 const FuncionariosPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

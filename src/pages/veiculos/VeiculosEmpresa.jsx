@@ -1,105 +1,112 @@
 import React, { useState, useEffect } from 'react';
-import AdministradorList from '../components/AdministradorList';
-import AdministradorForm from '../components/AdministradorForm';
-import Modal from '../components/Modal';
-import { administradorService } from '../services/administradorService';
+import VeiculoEmpresaList from '../../components/veiculos/VeiculoEmpresaList';
+import VeiculoEmpresaForm from '../../components/veiculos/VeiculoEmpresaForm';
+import Modal from '../../components/common/Modal';
+import { veiculoEmpresaService } from '../../services/veiculoEmpresaService';
 
-const AdministradoresPage = () => {
-  const [administradores, setAdministradores] = useState([]);
+const VeiculosEmpresa = () => {
+  const [veiculos, setVeiculos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [formLoading, setFormLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingAdministrador, setEditingAdministrador] = useState(null);
+  const [editingVeiculo, setEditingVeiculo] = useState(null);
   const [error, setError] = useState('');
 
-  // Load all administradores
-  const loadAdministradores = async () => {
+  // Carregar todos os veículos
+  const loadVeiculos = async () => {
     try {
       setLoading(true);
       setError('');
-      const data = await administradorService.getAll();
-      setAdministradores(data);
+      const data = await veiculoEmpresaService.findAll();
+      setVeiculos(data);
     } catch (error) {
       setError(error.message);
-      console.error('Erro ao carregar administradores:', error);
+      console.error('Erro ao carregar veículos:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  // Load data on component mount
+  // Carregar dados na montagem do componente
   useEffect(() => {
-    loadAdministradores();
+    loadVeiculos();
   }, []);
 
-  // Handle create new administrador
+  // Lidar com criação de novo veículo
   const handleCreate = () => {
-    setEditingAdministrador(null);
+    setEditingVeiculo(null);
     setIsModalOpen(true);
   };
 
-  // Handle edit administrador
-  const handleEdit = (administrador) => {
-    setEditingAdministrador(administrador);
+  // Lidar com edição de veículo
+  const handleEdit = (veiculo) => {
+    setEditingVeiculo(veiculo);
     setIsModalOpen(true);
   };
 
-  // Handle delete administrador
+  // Lidar com exclusão de veículo
   const handleDelete = async (id) => {
-    try {
-      await administradorService.delete(id);
-      await loadAdministradores();
-    } catch (error) {
-      setError('Erro ao excluir administrador: ' + error.message);
+    if (window.confirm('Tem certeza que deseja excluir este veículo?')) {
+      try {
+        await veiculoEmpresaService.delete(id);
+        await loadVeiculos(); // Recarregar a lista
+      } catch (error) {
+        setError(error.message);
+        console.error('Erro ao deletar veículo:', error);
+      }
     }
   };
 
-  // Handle form submission
+  // Lidar com submissão do formulário
   const handleFormSubmit = async (formData) => {
     try {
       setFormLoading(true);
       setError('');
 
-      if (editingAdministrador) {
-        await administradorService.update(editingAdministrador.id, formData);
+      if (editingVeiculo) {
+        // Atualizar existente
+        await veiculoEmpresaService.update(editingVeiculo.id, formData);
       } else {
-        await administradorService.create(formData);
+        // Criar novo
+        await veiculoEmpresaService.create(formData);
       }
 
       setIsModalOpen(false);
-      setEditingAdministrador(null);
-      await loadAdministradores();
+      setEditingVeiculo(null);
+      await loadVeiculos(); // Recarregar a lista
     } catch (error) {
       setError(error.message);
+      console.error('Erro ao salvar veículo:', error);
     } finally {
       setFormLoading(false);
     }
   };
 
-  // Handle form cancel
+  // Lidar com cancelamento do formulário
   const handleFormCancel = () => {
     setIsModalOpen(false);
-    setEditingAdministrador(null);
+    setEditingVeiculo(null);
+    setError('');
   };
 
   return (
-    <div className="h-100 d-flex flex-column">
+    <div className="h-100 d-flex flex-column overflow-hidden">
       <div className="d-flex justify-content-between align-items-center mb-4 flex-shrink-0">
         <div>
           <h2 className="text-primary fw-bold mb-2">
-            <i className="bi bi-person-fill-gear me-3"></i>
-            Gerenciar Administradores
+            <i className="bi bi-truck me-3"></i>
+            Gerenciar Veículos da Empresa
           </h2>
           <p className="text-muted mb-0">
-            Cadastre e gerencie os administradores do sistema
+            Cadastre e gerencie a frota de veículos da empresa
           </p>
         </div>
         <button 
           onClick={handleCreate}
           className="btn btn-primary btn-lg shadow"
         >
-          <i className="bi bi-person-plus me-2"></i>
-          Novo Administrador
+          <i className="bi bi-truck-fill me-2"></i>
+          Novo Veículo
         </button>
       </div>
 
@@ -118,8 +125,8 @@ const AdministradoresPage = () => {
 
       <div className="card shadow-sm flex-grow-1 d-flex flex-column overflow-hidden">
         <div className="card-body d-flex flex-column flex-grow-1 p-4 overflow-auto">
-          <AdministradorList
-            administradores={administradores}
+          <VeiculoEmpresaList
+            veiculos={veiculos}
             onEdit={handleEdit}
             onDelete={handleDelete}
             loading={loading}
@@ -130,11 +137,11 @@ const AdministradoresPage = () => {
       <Modal
         isOpen={isModalOpen}
         onClose={handleFormCancel}
-        title={editingAdministrador ? 'Editar Administrador' : 'Novo Administrador'}
+        title={editingVeiculo ? 'Editar Veículo' : 'Novo Veículo'}
         size="lg"
       >
-        <AdministradorForm
-          initialData={editingAdministrador}
+        <VeiculoEmpresaForm
+          initialData={editingVeiculo}
           onSubmit={handleFormSubmit}
           onCancel={handleFormCancel}
           loading={formLoading}
@@ -144,4 +151,4 @@ const AdministradoresPage = () => {
   );
 };
 
-export default AdministradoresPage;
+export default VeiculosEmpresa;

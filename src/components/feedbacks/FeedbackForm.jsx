@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { feedbackService } from '../services/feedbackService.js';
+import { feedbackService } from '../../services/feedbackService.js';
 
 const FeedbackForm = ({ initialData, onSubmit, onCancel, loading }) => {
   const [formData, setFormData] = useState({

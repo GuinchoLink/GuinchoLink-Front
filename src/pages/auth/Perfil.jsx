@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../contexts/AuthContext';
-import administradorService from '../services/administradorService';
+import { useAuth } from '../../contexts/AuthContext';
+import administradorService from '../../services/administradorService';
 
 const Perfil = () => {
   const { user, setUser } = useAuth();

@@ -1,27 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import ClienteList from '../components/ClienteList';
-import ClienteForm from '../components/ClienteForm';
-import Modal from '../components/Modal';
-import { clienteService } from '../services/clienteService';
+import FuncionarioList from '../../components/usuarios/FuncionarioList';
+import FuncionarioForm from '../../components/usuarios/FuncionarioForm';
+import Modal from '../../components/common/Modal';
+import { funcionarioService } from '../../services/funcionarioService';
 
-const Clientes = () => {
-  const [clientes, setClientes] = useState([]);
+const Funcionarios = () => {
+  const [funcionarios, setFuncionarios] = useState([]);
   const [loading, setLoading] = useState(true);
   const [formLoading, setFormLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingCliente, setEditingCliente] = useState(null);
+  const [editingFuncionario, setEditingFuncionario] = useState(null);
   const [error, setError] = useState('');
 
-  // Load all clients
-  const loadClientes = async () => {
+  // Load all funcionarios
+  const loadFuncionarios = async () => {
     try {
       setLoading(true);
       setError('');
-      const data = await clienteService.findAll();
-      setClientes(data);
+      const data = await funcionarioService.getAll();
+      setFuncionarios(data);
     } catch (error) {
       setError(error.message);
-      console.error('Erro ao carregar clientes:', error);
+      console.error('Erro ao carregar funcionários:', error);
     } finally {
       setLoading(false);
     }
@@ -29,45 +29,28 @@ const Clientes = () => {
 
   // Load data on component mount
   useEffect(() => {
-    loadClientes();
+    loadFuncionarios();
   }, []);
 
-  // Handle create new client
+  // Handle create new funcionario
   const handleCreate = () => {
-    setEditingCliente(null);
+    setEditingFuncionario(null);
     setIsModalOpen(true);
   };
 
-  // Handle edit client
-  const handleEdit = (cliente) => {
-    setEditingCliente(cliente);
+  // Handle edit funcionario
+  const handleEdit = (funcionario) => {
+    setEditingFuncionario(funcionario);
     setIsModalOpen(true);
   };
-  // Handle delete client
+
+  // Handle delete funcionario
   const handleDelete = async (id) => {
     try {
-      await clienteService.delete(id);
-      await loadClientes(); // Reload the list
+      await funcionarioService.delete(id);
+      await loadFuncionarios();
     } catch (error) {
-      console.error('Erro completo:', error);
-      console.error('Error response data:', error.response?.data);
-      
-      // Verificar se é o campo "err" específico do backend
-      if (error.response && error.response.data && error.response.data.err) {
-        setError(error.response.data.err);
-      } else if (error.response && error.response.data && error.response.data.error) {
-        setError(error.response.data.error);
-      } else if (error.response && error.response.data && error.response.data.message) {
-        setError(error.response.data.message);
-      } else if (error.response && error.response.data && typeof error.response.data === 'string') {
-        setError(error.response.data);
-      } else {
-        setError('Erro ao deletar cliente: ' + error.message);
-      }
-      
-      setTimeout(() => {
-        setError('');
-      }, 5000);
+      setError('Erro ao excluir funcionário: ' + error.message);
     }
   };
 
@@ -77,20 +60,17 @@ const Clientes = () => {
       setFormLoading(true);
       setError('');
 
-      if (editingCliente) {
-        // Update existing
-        await clienteService.update(editingCliente.id, formData);
+      if (editingFuncionario) {
+        await funcionarioService.update(editingFuncionario.id, formData);
       } else {
-        // Create new
-        await clienteService.create(formData);
+        await funcionarioService.create(formData);
       }
 
       setIsModalOpen(false);
-      setEditingCliente(null);
-      await loadClientes(); // Reload the list
+      setEditingFuncionario(null);
+      await loadFuncionarios();
     } catch (error) {
       setError(error.message);
-      console.error('Erro ao salvar cliente:', error);
     } finally {
       setFormLoading(false);
     }
@@ -99,20 +79,19 @@ const Clientes = () => {
   // Handle form cancel
   const handleFormCancel = () => {
     setIsModalOpen(false);
-    setEditingCliente(null);
-    setError('');
+    setEditingFuncionario(null);
   };
 
   return (
-    <div className="h-100 d-flex flex-column overflow-auto">
+    <div className="h-100 d-flex flex-column">
       <div className="d-flex justify-content-between align-items-center mb-4 flex-shrink-0">
         <div>
           <h2 className="text-primary fw-bold mb-2">
-            <i className="bi bi-people-fill me-3"></i>
-            Gerenciar Clientes
+            <i className="bi bi-person-badge-fill me-3"></i>
+            Gerenciar Funcionários
           </h2>
           <p className="text-muted mb-0">
-            Cadastre e gerencie os clientes do GuinchoLink
+            Cadastre e gerencie os funcionários da empresa
           </p>
         </div>
         <button 
@@ -120,7 +99,7 @@ const Clientes = () => {
           className="btn btn-primary btn-lg shadow"
         >
           <i className="bi bi-person-plus me-2"></i>
-          Novo Cliente
+          Novo Funcionário
         </button>
       </div>
 
@@ -139,8 +118,8 @@ const Clientes = () => {
 
       <div className="card shadow-sm flex-grow-1 d-flex flex-column overflow-hidden">
         <div className="card-body d-flex flex-column flex-grow-1 p-4 overflow-auto client-list">
-          <ClienteList
-            clientes={clientes}
+          <FuncionarioList
+            funcionarios={funcionarios}
             onEdit={handleEdit}
             onDelete={handleDelete}
             loading={loading}
@@ -151,11 +130,11 @@ const Clientes = () => {
       <Modal
         isOpen={isModalOpen}
         onClose={handleFormCancel}
-        title={editingCliente ? 'Editar Cliente' : 'Novo Cliente'}
+        title={editingFuncionario ? 'Editar Funcionário' : 'Novo Funcionário'}
         size="lg"
       >
-        <ClienteForm
-          initialData={editingCliente}
+        <FuncionarioForm
+          initialData={editingFuncionario}
           onSubmit={handleFormSubmit}
           onCancel={handleFormCancel}
           loading={formLoading}
@@ -165,4 +144,4 @@ const Clientes = () => {
   );
 };
 
-export default Clientes;
+export default Funcionarios;

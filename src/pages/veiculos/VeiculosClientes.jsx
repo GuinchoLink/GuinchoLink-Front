@@ -1,27 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import FuncionarioList from '../components/FuncionarioList';
-import FuncionarioForm from '../components/FuncionarioForm';
-import Modal from '../components/Modal';
-import { funcionarioService } from '../services/funcionarioService';
+import VeiculoClienteList from '../../components/veiculos/VeiculoClienteList';
+import VeiculoClienteForm from '../../components/veiculos/VeiculoClienteForm';
+import Modal from '../../components/common/Modal';
+import { veiculoClienteService } from '../../services/veiculoClienteService';
 
-const Funcionarios = () => {
-  const [funcionarios, setFuncionarios] = useState([]);
+const VeiculosClientes = () => {
+  const [veiculos, setVeiculos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [formLoading, setFormLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingFuncionario, setEditingFuncionario] = useState(null);
+  const [editingVeiculo, setEditingVeiculo] = useState(null);
   const [error, setError] = useState('');
 
-  // Load all funcionarios
-  const loadFuncionarios = async () => {
+  // Load all vehicles
+  const loadVeiculos = async () => {
     try {
       setLoading(true);
       setError('');
-      const data = await funcionarioService.getAll();
-      setFuncionarios(data);
+      const data = await veiculoClienteService.findAll();
+      setVeiculos(data);
     } catch (error) {
       setError(error.message);
-      console.error('Erro ao carregar funcionários:', error);
+      console.error('Erro ao carregar veículos:', error);
     } finally {
       setLoading(false);
     }
@@ -29,28 +29,29 @@ const Funcionarios = () => {
 
   // Load data on component mount
   useEffect(() => {
-    loadFuncionarios();
+    loadVeiculos();
   }, []);
 
-  // Handle create new funcionario
+  // Handle create new vehicle
   const handleCreate = () => {
-    setEditingFuncionario(null);
+    setEditingVeiculo(null);
     setIsModalOpen(true);
   };
 
-  // Handle edit funcionario
-  const handleEdit = (funcionario) => {
-    setEditingFuncionario(funcionario);
+  // Handle edit vehicle
+  const handleEdit = (veiculo) => {
+    setEditingVeiculo(veiculo);
     setIsModalOpen(true);
   };
 
-  // Handle delete funcionario
+  // Handle delete vehicle
   const handleDelete = async (id) => {
     try {
-      await funcionarioService.delete(id);
-      await loadFuncionarios();
+      await veiculoClienteService.delete(id);
+      await loadVeiculos(); // Reload the list
     } catch (error) {
-      setError('Erro ao excluir funcionário: ' + error.message);
+      setError(error.message);
+      console.error('Erro ao deletar veículo:', error);
     }
   };
 
@@ -60,17 +61,20 @@ const Funcionarios = () => {
       setFormLoading(true);
       setError('');
 
-      if (editingFuncionario) {
-        await funcionarioService.update(editingFuncionario.id, formData);
+      if (editingVeiculo) {
+        // Update existing
+        await veiculoClienteService.update(editingVeiculo.id, formData);
       } else {
-        await funcionarioService.create(formData);
+        // Create new
+        await veiculoClienteService.create(formData);
       }
 
       setIsModalOpen(false);
-      setEditingFuncionario(null);
-      await loadFuncionarios();
+      setEditingVeiculo(null);
+      await loadVeiculos(); // Reload the list
     } catch (error) {
       setError(error.message);
+      console.error('Erro ao salvar veículo:', error);
     } finally {
       setFormLoading(false);
     }
@@ -79,27 +83,28 @@ const Funcionarios = () => {
   // Handle form cancel
   const handleFormCancel = () => {
     setIsModalOpen(false);
-    setEditingFuncionario(null);
+    setEditingVeiculo(null);
+    setError('');
   };
 
   return (
-    <div className="h-100 d-flex flex-column">
+    <div className="h-100 d-flex flex-column overflow-auto">
       <div className="d-flex justify-content-between align-items-center mb-4 flex-shrink-0">
         <div>
           <h2 className="text-primary fw-bold mb-2">
-            <i className="bi bi-person-badge-fill me-3"></i>
-            Gerenciar Funcionários
+            <i className="bi bi-truck-front-fill me-3"></i>
+            Gerenciar Veículos de Clientes
           </h2>
           <p className="text-muted mb-0">
-            Cadastre e gerencie os funcionários da empresa
+            Cadastre e gerencie os veículos dos clientes do GuinchoLink
           </p>
         </div>
         <button 
           onClick={handleCreate}
           className="btn btn-primary btn-lg shadow"
         >
-          <i className="bi bi-person-plus me-2"></i>
-          Novo Funcionário
+          <i className="bi bi-plus-circle me-2"></i>
+          Novo Veículo
         </button>
       </div>
 
@@ -117,9 +122,9 @@ const Funcionarios = () => {
       )}
 
       <div className="card shadow-sm flex-grow-1 d-flex flex-column overflow-hidden">
-        <div className="card-body d-flex flex-column flex-grow-1 p-4 overflow-auto client-list">
-          <FuncionarioList
-            funcionarios={funcionarios}
+        <div className="card-body d-flex flex-column flex-grow-1 p-4 overflow-auto">
+          <VeiculoClienteList
+            veiculos={veiculos}
             onEdit={handleEdit}
             onDelete={handleDelete}
             loading={loading}
@@ -130,11 +135,11 @@ const Funcionarios = () => {
       <Modal
         isOpen={isModalOpen}
         onClose={handleFormCancel}
-        title={editingFuncionario ? 'Editar Funcionário' : 'Novo Funcionário'}
+        title={editingVeiculo ? 'Editar Veículo' : 'Novo Veículo'}
         size="lg"
       >
-        <FuncionarioForm
-          initialData={editingFuncionario}
+        <VeiculoClienteForm
+          initialData={editingVeiculo}
           onSubmit={handleFormSubmit}
           onCancel={handleFormCancel}
           loading={formLoading}
@@ -144,4 +149,4 @@ const Funcionarios = () => {
   );
 };
 
-export default Funcionarios;
+export default VeiculosClientes;

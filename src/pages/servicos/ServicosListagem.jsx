@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { servicoService } from '../services/servicoService.js';
-import { funcionarioService } from '../services/funcionarioService.js';
-import { tipoServicoService } from '../services/tipoServicoService.js';
-import { veiculoEmpresaService } from '../services/veiculoEmpresaService.js';
-import Modal from '../components/Modal.jsx';
+import { servicoService } from '../../services/servicoService.js';
+import { funcionarioService } from '../../services/funcionarioService.js';
+import { tipoServicoService } from '../../services/tipoServicoService.js';
+import { veiculoEmpresaService } from '../../services/veiculoEmpresaService.js';
+import Modal from '../../components/common/Modal.jsx';
 
 const ServicosListagem = () => {
   console.log('Componente ServicosListagem renderizado');

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { fimServicoService } from '../services/fimServicoService';
-import { clienteService } from '../services/clienteService';
-import { veiculoClienteService } from '../services/veiculoClienteService';
-import { servicoService } from '../services/servicoService';
+import { fimServicoService } from '../../services/fimServicoService';
+import { clienteService } from '../../services/clienteService';
+import { veiculoClienteService } from '../../services/veiculoClienteService';
+import { servicoService } from '../../services/servicoService';
 
 const Dashboard = () => {
   const [fimServicos, setFimServicos] = useState([]);

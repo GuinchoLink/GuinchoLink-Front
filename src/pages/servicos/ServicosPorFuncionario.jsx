@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { servicoService } from '../services/servicoService.js';
-import { funcionarioService } from '../services/funcionarioService.js';
-import Modal from '../components/Modal.jsx';
+import { servicoService } from '../../services/servicoService.js';
+import { funcionarioService } from '../../services/funcionarioService.js';
+import Modal from '../../components/common/Modal.jsx';
 
 const ServicosPorFuncionario = () => {
   console.log('Componente ServicosPorFuncionario renderizado');

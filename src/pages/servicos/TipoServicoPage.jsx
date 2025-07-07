@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import TipoServicoList from '../components/TipoServicoList';
-import TipoServicoForm from '../components/TipoServicoForm';
-import Modal from '../components/Modal';
-import { tipoServicoService } from '../services/tipoServicoService';
+import TipoServicoList from '../../components/servicos/TipoServicoList';
+import TipoServicoForm from '../../components/servicos/TipoServicoForm';
+import Modal from '../../components/common/Modal';
+import { tipoServicoService } from '../../services/tipoServicoService';
 
 const TipoServicoPage = () => {
   const [tiposServico, setTiposServico] = useState([]);

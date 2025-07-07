@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { clienteService } from '../services/clienteService.js';
-import { funcionarioService } from '../services/funcionarioService.js';
-import { tipoServicoService } from '../services/tipoServicoService.js';
-import { veiculoClienteService } from '../services/veiculoClienteService.js';
-import { veiculoEmpresaService } from '../services/veiculoEmpresaService.js';
+import { clienteService } from '../../services/clienteService.js';
+import { funcionarioService } from '../../services/funcionarioService.js';
+import { tipoServicoService } from '../../services/tipoServicoService.js';
+import { veiculoClienteService } from '../../services/veiculoClienteService.js';
+import { veiculoEmpresaService } from '../../services/veiculoEmpresaService.js';
 
 const ServicoForm = ({ initialData, onSubmit, onCancel, loading }) => {
   const [formData, setFormData] = useState({

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { feedbackService } from '../services/feedbackService.js';
-import FeedbackForm from '../components/FeedbackForm.jsx';
-import FeedbackList from '../components/FeedbackList.jsx';
-import FeedbackView from '../components/FeedbackView.jsx';
-import Modal from '../components/Modal.jsx';
+import { feedbackService } from '../../services/feedbackService.js';
+import FeedbackForm from '../../components/feedbacks/FeedbackForm.jsx';
+import FeedbackList from '../../components/feedbacks/FeedbackList.jsx';
+import FeedbackView from '../../components/feedbacks/FeedbackView.jsx';
+import Modal from '../../components/common/Modal.jsx';
 
 const Feedbacks = () => {  const [feedbacks, setFeedbacks] = useState([]);
   const [loading, setLoading] = useState(true);

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import FimServicoForm from '../components/FimServicoForm';
-import Modal from '../components/Modal';
-import { fimServicoService } from '../services/fimServicoService';
-import { servicoService } from '../services/servicoService';
+import FimServicoForm from '../../components/servicos/FimServicoForm';
+import Modal from '../../components/common/Modal';
+import { fimServicoService } from '../../services/fimServicoService';
+import { servicoService } from '../../services/servicoService';
 
 const FimServicos = () => {
   const [fimServicos, setFimServicos] = useState([]);

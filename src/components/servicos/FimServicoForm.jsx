@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { servicoService } from '../services/servicoService';
+import { servicoService } from '../../services/servicoService';
 
 // Função para formatar data/hora no padrão "YYYY-MM-DDTHH:mm" com fuso local
 const formatDateToLocalInput = (date) => {

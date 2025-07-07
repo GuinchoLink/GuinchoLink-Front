@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { clienteService } from '../services/clienteService';
+import { clienteService } from '../../services/clienteService';
 
 const VeiculoClienteForm = ({ initialData, onSubmit, onCancel, loading }) => {
   const [formData, setFormData] = useState({
